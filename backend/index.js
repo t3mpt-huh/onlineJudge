@@ -56,6 +56,7 @@ app.post("/register",async (req,res)=>{
     }
 });
 
+
 app.post('/login',async (req,res)=>{
     try {
         //get all details from frontend
@@ -100,6 +101,7 @@ app.post('/login',async (req,res)=>{
         console.log(error.message);
     }
 })
+
 
 app.listen(8000,()=>{
     console.log("Server running on port: 8000");
