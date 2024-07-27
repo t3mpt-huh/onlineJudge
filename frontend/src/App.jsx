@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home } from "./pages/HomePage";
+import { Home } from "./pages/HomePage/HomePage";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { About } from "./pages/About";
-import { AddProblems } from "./pages/AddProblems";
-import { Compiler } from "./pages/Compiler";
+import { Problems } from "./pages/Problems";
+import { Compiler } from "./pages/Compiler/Compiler";
 
 import { Navbar } from "./components/Navbar";
+import './App.css';
 
 const App = () => {
 
@@ -19,7 +20,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
-          <Route path="/addProblems" element={<Contact />} />
+          <Route path="/problems" element={<Problems />} />
           <Route path="/compiler" element={<Compiler />} />
         </Routes>
       </Router>

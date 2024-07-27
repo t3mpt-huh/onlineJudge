@@ -5,8 +5,8 @@ export const Navbar = () => {
   return (
     <>
       <header>
-        <div className="navigation">
-          <div className="logo-brand">
+        <div className="nav">
+          <div className="site-title">
             <NavLink to="/">LetHimCode</NavLink>
           </div>
 
@@ -19,7 +19,7 @@ export const Navbar = () => {
                 <NavLink to="/about"> About </NavLink>
               </li>
               <li>
-                <NavLink to="/contact"> Contact </NavLink>
+                <NavLink to="/problems"> Problems </NavLink>
               </li>
               <li>
                 <NavLink to="/compiler"> Compiler </NavLink>
