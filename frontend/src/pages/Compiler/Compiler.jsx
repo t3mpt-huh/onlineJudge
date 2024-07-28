@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import axios from "axios";
 import MonacoEditor from "@monaco-editor/react";
-import './Compiler.css'; // Ensure this matches your CSS filename
+import './Compiler.css'; 
+// import PacmanLoader from "react-spinners/ClipLoader";
 
 export const Compiler = () => {
   const initialCode =
@@ -19,6 +20,8 @@ int main() {
   const [userInput, setUserInput] = useState("");
   const [result, setResult] = useState("");
 
+  // let [loading,setLoading] = usestate(true);
+
   const executeCode = async () => {
     const requestPayload = {
       language: "cpp",
@@ -30,6 +33,7 @@ int main() {
       const response = await axios.post("http://localhost:8080/compile", requestPayload);
       setResult(response.data.output);
     } catch (error) {
+      alert("some error occured");
       console.error("An error occurred:", error);
     }
   };
@@ -68,13 +72,21 @@ int main() {
             <button onClick={executeCode} className="execute-button">
               Execute
             </button>
+            
+            {/* <PacmanLoader
+            color="#3c6e71"
+            loading
+            margin={2}
+            size={15}
+            />            */}
           </div>
           <div className="output-area-wrapper">
             <textarea
+              placeholder="Output will appear here"
               value={result}
               className="output-area"
               readOnly
-              placeholder="Output will appear here"
+              
             />
           </div>
         </section>
