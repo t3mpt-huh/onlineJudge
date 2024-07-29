@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom/client";
 import axios from "axios";
 import MonacoEditor from "@monaco-editor/react";
+import CircleLoader from "react-spinners/CircleLoader";
 import './Compiler.css'; 
-// import PacmanLoader from "react-spinners/ClipLoader";
 
 export const Compiler = () => {
   const initialCode =
@@ -15,14 +14,14 @@ int main() {
 
     return 0;
 }`;
-  
+
   const [sourceCode, setSourceCode] = useState(initialCode);
   const [userInput, setUserInput] = useState("");
   const [result, setResult] = useState("");
-
-  // let [loading,setLoading] = usestate(true);
+  const [loading, setLoading] = useState(false);
 
   const executeCode = async () => {
+    setLoading(true);
     const requestPayload = {
       language: "cpp",
       code: sourceCode,
@@ -33,8 +32,10 @@ int main() {
       const response = await axios.post("http://localhost:8080/compile", requestPayload);
       setResult(response.data.output);
     } catch (error) {
-      alert("some error occured");
+      alert("some error occurred");
       console.error("An error occurred:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,32 +62,31 @@ int main() {
         <section className="result-section">
           <div className="input-area-wrapper">
             <textarea
+              style={{ resize: 'none', overflow: 'auto'}}
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
               className="input-area"
               placeholder="Enter your input here"
             />
           </div>
-          <div className="execute-message">
-            <span>Press execute to run your code</span>
-            <button onClick={executeCode} className="execute-button">
-              Execute
+          <div className="execute-container">
+            <span className="execute-message">Run your code</span>
+            <button onClick={executeCode} className="execute-button" disabled={loading}>
+              Execute   
             </button>
-            
-            {/* <PacmanLoader
-            color="#3c6e71"
-            loading
-            margin={2}
-            size={15}
-            />            */}
+            {loading && (
+              <div className="loader-wrapper">
+                <CircleLoader size={25} color={"#fff"} loading={loading} />
+              </div>
+            )}
           </div>
           <div className="output-area-wrapper">
             <textarea
+              style={{ resize: 'none' , overflow: 'auto'}}
               placeholder="Output will appear here"
               value={result}
               className="output-area"
               readOnly
-              
             />
           </div>
         </section>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { jwt } = require("jsonwebtoken");
 
-// Define the User schema
+//defining user schema
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -26,9 +26,9 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// During Password Hashing:  The pre middleware is defined within the userSchema before creating the User model. This ensures that the middleware is properly applied to user documents before they are saved to the database.
 
-//? secure the password with the bcrypt
+
+//secure the password with the bcrypt
 userSchema.pre("save", async function () {
   const user = this;
   console.log("actual data ", this);
