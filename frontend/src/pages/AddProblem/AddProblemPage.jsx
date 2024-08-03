@@ -1,3 +1,5 @@
+// src/pages/AddProblem/AddProblemPage.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +20,7 @@ export const AddProblemPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProblem(prevState => ({
+    setProblem((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -28,14 +30,14 @@ export const AddProblemPage = () => {
     const { value } = e.target;
     const updatedArray = [...problem[arrayName]];
     updatedArray[index] = value;
-    setProblem(prevState => ({
+    setProblem((prevState) => ({
       ...prevState,
       [arrayName]: updatedArray,
     }));
   };
 
   const handleAddField = (arrayName) => {
-    setProblem(prevState => ({
+    setProblem((prevState) => ({
       ...prevState,
       [arrayName]: [...prevState[arrayName], ''],
     }));
@@ -48,14 +50,14 @@ export const AddProblemPage = () => {
       await axios.post('http://localhost:5000/api/problems/addProblem', problem);
       navigate('/problems');
     } catch (error) {
-        if (error.response) {
-          console.error('Error adding problem:', error.response.data); // Log server response
-        } else if (error.request) {
-          console.error('Error: No response received', error.request); // Log if no response was received
-        } else {
-          console.error('Error:', error.message); // Log any other error messages
-        }
+      if (error.response) {
+        console.error('Error adding problem:', error.response.data); // Log server response
+      } else if (error.request) {
+        console.error('Error: No response received', error.request); // Log if no response was received
+      } else {
+        console.error('Error:', error.message); // Log any other error messages
       }
+    }
   };
 
   return (

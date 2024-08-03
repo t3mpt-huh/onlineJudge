@@ -62,3 +62,31 @@ body {
 .nav a:hover {
     transform: translate(-1px, -1px); /* Moves the link slightly to the top left */
 }
+
+/* Styling for logout button */
+.logout-button {
+    background-color: red; /* Red background */
+    border: 2px solid red; /* Red border */
+    color: white; /* White text color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 8px 16px; /* Padding for button */
+    font-size: 1rem; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, border-color 0.3s, transform 0.3s; /* Transition for hover effects */
+    text-align: center;
+    border: none; /* Remove default border */
+    display: inline-block; /* Ensure it behaves like a button */
+   
+}
+
+.logout-button:hover {
+    background-color: darkred; /* Darker red on hover */
+    border-color: darkred; /* Darker border on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+    transform: translateX(-2px); /* Slight lift effect on hover */
+}
+
+.logout-button:active {
+    /* transform: translateY(1px); Slightly pressed effect on click */
+    transform: translateX(-2px); /* Slight lift effect on hover */
+}

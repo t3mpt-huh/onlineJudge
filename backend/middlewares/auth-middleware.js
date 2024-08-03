@@ -2,26 +2,25 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user-model");
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.header("Authorization");
-
-  if (!token) {
-    // If you attempt to use an expired token, you'll receive a "401 Unauthorized HTTP" response.
-    return res
-      .status(401)
-      .json({ message: "Unauthorized HTTP, Token not provided" });
+  // Extract the token from the Authorization header
+  const authHeader = req.header("Authorization");
+  
+  if (!authHeader) {
+    return res.status(401).json({ message: "Unauthorized. Token not provided." });
   }
 
-  // Assuming token is in the format "Bearer <jwtToken>, Removing the "Bearer" prefix"
-  const jwtToken = token.replace("Bearer", "").trim();
-  console.log("token form auth middleware", jwtToken);
+  // Assuming the token is in the format "Bearer <jwtToken>"
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : authHeader.trim();
+  console.log("Token from auth middleware:", token);
 
   try {
-    const isVerified = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    const userData = await User.findOne({ email: isVerified.email }).select({
-      password: 0,
-    });
-    console.log(userData);
+    // Find the user by email extracted from the token
+    const userData = await User.findOne({ email: decodedToken.email }).select({ password: 0 });
+    if (!userData) {
+      return res.status(401).json({ message: "Unauthorized. User not found." });
+    }
 
     req.user = userData;
     req.token = token;

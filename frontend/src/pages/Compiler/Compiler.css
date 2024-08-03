@@ -92,3 +92,29 @@
   display: flex;
   align-items: center;
 }
+
+/* Reduce the padding and font-size of the toast notifications */
+.Toastify__toast {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* Optionally, you can adjust the icon size and margin as well */
+.Toastify__toast-icon {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+}
+
+.time-info {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.time-info p {
+  margin: 5px 0;
+}
+

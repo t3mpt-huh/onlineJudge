@@ -1,85 +1,96 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-
-//home page
-  const home = async(req, res) => {
-  try{
-    res
-      .status(200)
-      .send(
-        "this is home page :) "
-      );
-  }catch(error){
+// home page
+const home = async (req, res) => {
+  try {
+    res.status(200).send("this is home page :)");
+  } catch (error) {
     console.log(error);
   }
 };
 
-
 //register logic
-const register = async(req, res) => {
-  try{
-    console.log(req.body);
+const register = async (req, res) => {
+  try {
     const { username, email, phone, password } = req.body;
 
     const userExist = await User.findOne({ email });
 
-    if(userExist){
-      return res.status(400).json({ message: "email already exists" });
+    if (userExist) {
+      return res.status(400).json({ message: "Email already exists" });
     }
 
-    // hash the password
-    const saltRound = 10;
-    const hash_password = await bcrypt.hash(password, saltRound);
-
-    const userCreated = await User.create({
+    // Create and hash the user password
+    const userCreated = new User({
       username,
       email,
       phone,
-      password : hash_password,
+      password // Password will be hashed in pre('save') hook
     });
+
+    await userCreated.save(); // Save the user to trigger the pre('save') hook
 
     res.status(201).json({
       msg: "Successfully registered user",
       token: await userCreated.generateToken(),
       userId: userCreated._id.toString(),
     });
-  }catch(error){
-    // res.status(500).json("Internal server error!");
-    console.log(req.body);
-    next(error);  
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Internal server error!");
   }
 };
 
-//login logic
-const login = async(req, res) => {
-  try{
+
+// login logic
+const login = async (req, res) => {
+  try {
     const { email, password } = req.body;
 
+    console.log('Login attempt:', { email, password });
+
     const userExist = await User.findOne({ email });
-    console.log(userExist);
-
-    if(!userExist){
-      return res.status(400).json({ message: "Invalid Credentials " });
+    if (!userExist) {
+      console.log('User does not exist');
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const user = await bcrypt.compare(password, userExist.password);
+    console.log('User found:', userExist);
 
-    if(user){
-      res.status(200).json({
-        msg: "Login Successful",
-        token: await userExist.generateToken(),
+    const isMatch = await bcrypt.compare(password, userExist.password);
+    if (!isMatch) {
+      console.log('Password does not match');
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    console.log('Password matches');
+
+    const token = jwt.sign(
+      {
         userId: userExist._id.toString(),
-      });
-    } else{
-      res.status(401).json({ message: "Invalid email or password" });
-    }
-  } catch(error){
-    res.status(500).json("internal server error");
+        email: userExist.email,
+        isAdmin: userExist.isAdmin,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '30d' }
+    );
+
+    res.status(200).json({
+      msg: "Login Successful",
+      token,
+      userId: userExist._id.toString(),
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json("Internal server error");
   }
 };
 
-//send user data to frontend
+
+
+// send user data to frontend
 const user = async (req, res) => {
   try {
     const userData = req.user;
@@ -87,6 +98,7 @@ const user = async (req, res) => {
     return res.status(200).json({ userData });
   } catch (error) {
     console.log(`error from the user route ${error}`);
+    res.status(500).json("Internal server error");
   }
 };
 

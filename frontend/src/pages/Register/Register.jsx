@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../components/AuthContext';
 import './Register.css';
 
 export const Register = () => {
@@ -7,47 +9,80 @@ export const Register = () => {
     username: '',
     email: '',
     phone: '',
-    password: ''
+    password: '',
   });
+  const { setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/auth/register', formData);
-      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+      const userResponse = await axios.get('http://localhost:5000/api/auth/user', {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      });
+      setUser(userResponse.data.userData);
+      navigate('/');
     } catch (error) {
-      console.error(error);
+      console.error('Error registering:', error);
     }
   };
 
   return (
-    <div className="register-form">
+    <div className="register-container">
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username</label>
-          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Email</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Phone</label>
-          <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Password</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </div>
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Phone:
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </label>
         <button type="submit">Register</button>
       </form>
     </div>
   );
 };
-
-

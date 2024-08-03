@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { jwt } = require("jsonwebtoken");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-//defining user schema
+// Define user schema
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -26,33 +26,25 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-
-
-//secure the password with the bcrypt
-userSchema.pre("save", async function () {
+// Hash the password before saving
+userSchema.pre('save', async function (next) {
   const user = this;
-  console.log("actual data ", this);
 
-  if (!user.isModified) {
+  if (!user.isModified('password')) {
     return next();
   }
 
   try {
     const saltRound = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(user.password, saltRound);
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(user.password, saltRound);
+    next();
   } catch (error) {
     return next(error);
   }
 });
 
-// ? Why not to use the arrow functions when creating an instance methods in mongoose.
-// The key difference is that the function is defined as a regular function with the **`function`** keyword, not as an arrow function. This is important because when defining instance methods in Mongoose, you should use regular functions (not arrow functions) to ensure that **`this`** refers to the instance of the document being operated on.
-
-//? Generate JSON Web Token
-
+// Generate JSON Web Token
 userSchema.methods.generateToken = async function () {
-  console.log("I am token");
   try {
     return jwt.sign(
       {
@@ -62,15 +54,14 @@ userSchema.methods.generateToken = async function () {
       },
       process.env.JWT_SECRET_KEY,
       {
-        expiresIn: "30d",
+        expiresIn: '30d',
       }
     );
   } catch (error) {
-    console.error("Token Error: ", error);
+    console.error('Token Error:', error);
   }
 };
 
-//? define the model or the collection name
-const User = new mongoose.model("USER", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

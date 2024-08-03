@@ -1,44 +1,81 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home } from "./pages/HomePage/HomePage";
-import { Register } from "./pages/Register/Register";
-import { Login } from "./pages/Login/Login";
-import { Logout } from "./pages/Logout";
-import { About } from "./pages/About";
-import { Footer } from "./components/Footer/Footer";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/HomePage/HomePage';
+import { Register } from './pages/Register/Register';
+import { Login } from './pages/Login/Login';
 
-import { Compiler } from "./pages/Compiler/Compiler";
+import { About } from './pages/About';
+import { Footer } from './components/Footer/Footer';
 
+import { Compiler } from './pages/Compiler/Compiler';
 import { ProblemsPage } from './pages/Problems/ProblemsPage';
 import { ProblemDetailPage } from './pages/ProblemDetails/ProblemDetailsPage';
 import { AddProblemPage } from './pages/AddProblem/AddProblemPage';
 import { EditProblemPage } from './pages/EditProblem/EditProblemPage';
+import {AdminPage} from './pages/AdminPage/AdminPage'; // Admin Page
+import PrivateRoute from './components/PrivateRoute';
+import AdminRoute from './components/AdminRoute';
+import { AuthProvider } from './components/AuthContext';
 
 import { Navbar } from "./components/Navbar";
 import './App.css';
 
 const App = () => {
-
-  return (  
-    <>
+  return (
+    <AuthProvider>
       <Router>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/logout" element={<Logout />} />
+          
           <Route path="/about" element={<About />} />
-
-          <Route path="/problems" element={<ProblemsPage />} />
-          <Route path="/problems/:problemId" element={<ProblemDetailPage />} />
-          <Route path="/addproblem" element={<AddProblemPage />} />
-          <Route path="/editproblem" element={<EditProblemPage />} />
-
           <Route path="/compiler" element={<Compiler />} />
+          <Route
+            path="/problems"
+            element={
+              <PrivateRoute>
+                <ProblemsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/problems/:problemId"
+            element={
+              <PrivateRoute>
+                <ProblemDetailPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/addproblem"
+            element={
+              <AdminRoute>
+                <AddProblemPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/editproblem"
+            element={
+              <AdminRoute>
+                <EditProblemPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminPage />
+              </AdminRoute>
+            }
+          />
         </Routes>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
-    </>
+    </AuthProvider>
   );
 };
 
