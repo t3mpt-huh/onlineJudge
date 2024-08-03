@@ -47,7 +47,7 @@
 
 .input-area,
 .output-area {
-  height: 150px; /* Same height for symmetry */
+  height: 186px; /* Same height for symmetry */
   width: 100%; /* Stretch to fill the width of the wrapper */
   border: 1px solid #ccc;
   border-radius: 4px;

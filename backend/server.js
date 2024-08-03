@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const authRoute = require("./router/auth-router");
+const problemsRoute = require("./router/problem-router");
 
 const connectDb = require("./utils/db");
 const errorMiddleware = require("./middlewares/error-middleware");
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mount the Router
 app.use("/api/auth", authRoute);
+app.use("/api/problems", problemsRoute);
 
 app.use(errorMiddleware);
 

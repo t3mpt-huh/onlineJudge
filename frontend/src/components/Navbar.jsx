@@ -16,13 +16,13 @@ export const Navbar = () => {
                 <NavLink to="/"> Home </NavLink>
               </li>
               <li>
-                <NavLink to="/about"> About </NavLink>
+                <NavLink to="/compiler"> Compiler </NavLink>
               </li>
               <li>
                 <NavLink to="/problems"> Problems </NavLink>
               </li>
               <li>
-                <NavLink to="/compiler"> Compiler </NavLink>
+                <NavLink to="/about"> Discuss </NavLink>
               </li>
               <li>
                 <NavLink to="/register"> Register </NavLink>

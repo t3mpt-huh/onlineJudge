@@ -54,7 +54,8 @@ body {
 
 /* Active link background color */
 .nav li.active {
-    background-color: #073b4c; /* Updated active link color */
+    background-color: white; /* Updated active link color */
+    opacity: 50%;
 }
 
 /* Hover effect for links */

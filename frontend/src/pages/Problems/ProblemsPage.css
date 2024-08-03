@@ -1,0 +1,40 @@
+/* General styles for the Problems Page */
+.problems-page {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    text-align: center;
+    color: #3c6e71;
+    margin-bottom: 20px;
+  }
+  
+  .problems-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .problem-item {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+  }
+  
+  .problem-item:hover {
+    background-color: #e0f7fa;
+  }
+  
+  .problem-link {
+    text-decoration: none;
+    color: #3c6e71;
+    font-size: 18px;
+  }
+  
+  .problem-link:hover {
+    text-decoration: underline;
+  }
+  

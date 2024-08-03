@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 
 //home page
-const home = async(req, res) => {
+  const home = async(req, res) => {
   try{
     res
       .status(200)
@@ -47,7 +47,7 @@ const register = async(req, res) => {
   }catch(error){
     // res.status(500).json("Internal server error!");
     console.log(req.body);
-    next(error);
+    next(error);  
   }
 };
 

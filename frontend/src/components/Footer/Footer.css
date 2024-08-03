@@ -1,0 +1,26 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  background-color: #3c6e71;
+  color: white;
+  text-align: center;
+  padding: 0; /* Remove padding to use Flexbox for centering */
+  height: 40px; /* Set a fixed height */
+  display: flex;
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+}

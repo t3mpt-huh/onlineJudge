@@ -1,0 +1,22 @@
+.problems-page {
+    padding: 20px;
+  }
+  
+  .problems-page table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .problems-page th, .problems-page td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .problems-page th {
+    background-color: #f4f4f4;
+  }
+  
+  .problems-page button {
+    margin-right: 10px;
+  }
+  
