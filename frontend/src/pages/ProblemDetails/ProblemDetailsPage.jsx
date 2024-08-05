@@ -10,8 +10,21 @@ import './ProblemDetailsPage.css';
 
 export const ProblemDetailPage = () => {
   const [problem, setProblem] = useState(null);
-  const [sourceCode, setSourceCode] = useState('');
+  const [sourceCode, setSourceCode] = useState(`
+// Sample C++ Code
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+    cout << "Sum is: " << (a + b) << endl;
+    return 0;
+}
+  `); // Sample code snippet
   const [loading, setLoading] = useState(false);
+  const [compileTime, setCompileTime] = useState(null);
+  const [executeTime, setExecuteTime] = useState(null);
   const { problemId } = useParams();
 
   useEffect(() => {
@@ -19,8 +32,6 @@ export const ProblemDetailPage = () => {
       try {
         const response = await axios.get('http://localhost:5000/api/problems/getProblems');
         const problems = response.data;
-
-        // Find the problem with the matching ID
         const foundProblem = problems.find(p => p._id === problemId);
         setProblem(foundProblem);
       } catch (error) {
@@ -34,17 +45,51 @@ export const ProblemDetailPage = () => {
   const executeTestCases = async (testCases, hidden = false) => {
     for (let i = 0; i < testCases.length; i++) {
       const [input, expectedOutput] = testCases[i];
+      console.log(`Running test case ${i + 1}:`, { input, expectedOutput });
+  
       const requestPayload = {
         language: "cpp",
         code: sourceCode,
         input: input,
       };
-
+  
       try {
         const response = await axios.post("http://localhost:8080/compile", requestPayload);
-        if (response.data.output.trim() !== expectedOutput.trim()) {
+  
+        let responseData = response.data;
+        if (typeof responseData === 'string') {
+          try {
+            responseData = JSON.parse(responseData);
+          } catch (error) {
+            console.error(`Error parsing response data for test case ${i + 1}:`, error);
+            return false;
+          }
+        }
+  
+        if (responseData && typeof responseData === 'object' && 'output' in responseData) {
+          const { output: outputObj, compileTime: backendCompileTime, executeTime: backendExecuteTime } = responseData;
+  
+          // Display compile and execute time
+          setCompileTime(backendCompileTime !== undefined ? backendCompileTime : null);
+          setExecuteTime(backendExecuteTime !== undefined ? backendExecuteTime : null);
+  
+          // Extract the actual output from the outputObj
+          const finalOutput = outputObj.output;
+  
+          // Log the outputs before comparison
+          console.log(`Expected Output for test case ${i + 1}:`, expectedOutput.trim());
+          console.log(`Actual Output for test case ${i + 1}:`, finalOutput.trim());
+  
+          // Compare only the output part
+          if (finalOutput.trim() !== expectedOutput.trim()) {
+            console.log(`Test case ${i + 1} failed:`, { finalOutput, expectedOutput });
+            return false;
+          }
+        } else {
+          console.error(`Unexpected response format for test case ${i + 1}:`, responseData);
           return false;
         }
+  
       } catch (error) {
         console.error(`Error executing ${hidden ? 'hidden ' : ''}test case ${i + 1}:`, error);
         return false;
@@ -52,6 +97,7 @@ export const ProblemDetailPage = () => {
     }
     return true;
   };
+  
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -106,6 +152,8 @@ export const ProblemDetailPage = () => {
             </div>
           )}
         </button>
+        <p>Compile Time: {compileTime ? `${compileTime.toFixed(2)} ms` : 'N/A'}</p>
+        <p>Execute Time: {executeTime ? `${executeTime.toFixed(2)} ms` : 'N/A'}</p>
       </div>
       <div className="problem-detail-right">
         <MonacoEditor
@@ -120,10 +168,14 @@ export const ProblemDetailPage = () => {
           }}
           defaultLanguage="cpp"
         />
+        {compileTime !== null && executeTime !== null && (
+          <div className="time-info">
+            <p><strong>Compilation Time:</strong> {compileTime.toFixed(2)} ms</p>
+            <p><strong>Execution Time:</strong> {executeTime.toFixed(2)} ms</p>
+          </div>
+        )}
       </div>
       <ToastContainer position="bottom-right" theme="dark" />
     </div>
   );
 };
-
-export default ProblemDetailPage;

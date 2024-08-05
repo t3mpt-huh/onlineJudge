@@ -8,27 +8,28 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath, inputPath) => {
+const executePython = (filepath, inputPath) => {
   const jobId = path.basename(filepath).split(".")[0];
-  const outPath = path.join(outputPath, `${jobId}.exe`);
+  const scriptPath = path.join(outputPath, `${jobId}.py`);
 
   return new Promise((resolve, reject) => {
-    // Measure start time for compilation
+    // Measure start time for copying the script (approximate compilation time)
     const compileStart = process.hrtime();
 
-    exec(`g++ ${filepath} -o ${outPath}`, (compileError, stdout, stderr) => {
-      if (compileError) {
-        return reject({ type: 'compilation', message: stderr });
+    // Copy the script to the outputPath
+    fs.copyFile(filepath, scriptPath, (copyError) => {
+      if (copyError) {
+        return reject({ type: 'compilation', message: copyError.message });
       }
 
-      // Measure end time for compilation and calculate duration
+      // Measure end time for copying and calculate duration
       const [compileSeconds, compileNanoseconds] = process.hrtime(compileStart);
       const compileTime = compileSeconds * 1000 + compileNanoseconds / 1e6; // Convert to milliseconds
 
       // Measure start time for execution
       const executeStart = process.hrtime();
 
-      exec(`cd ${outputPath} && .\\${jobId}.exe < ${inputPath}`, (runtimeError, runtimeStdout, runtimeStderr) => {
+      exec(`python ${scriptPath} < ${inputPath}`, (runtimeError, runtimeStdout, runtimeStderr) => {
         // Measure end time for execution and calculate duration
         const [executeSeconds, executeNanoseconds] = process.hrtime(executeStart);
         const executeTime = executeSeconds * 1000 + executeNanoseconds / 1e6; // Convert to milliseconds
@@ -37,21 +38,17 @@ const executeCpp = (filepath, inputPath) => {
           return reject({ type: 'runtime', message: runtimeStderr });
         }
 
-        // Log the output and timing information
-        const result = {
+        // Return output along with timing information
+        resolve({
           output: runtimeStdout.toString().trim(), // Ensure output is a string and trim whitespace
-          compileTime,   // Compilation time
+          compileTime,   // Approximate compilation time
           executeTime    // Execution time
-        };
-        console.log('Backend Response:', result);
-
-        resolve(result);
+        });
       });
     });
   });
 };
 
-
 module.exports = {
-  executeCpp,
+  executePython,
 };
