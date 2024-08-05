@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import MonacoEditor from '@monaco-editor/react';
 import CircleLoader from 'react-spinners/CircleLoader';
+import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,13 +22,22 @@ int main() {
     cout << "Sum is: " << (a + b) << endl;
     return 0;
 }
-  `); // Sample code snippet
+  `);
   const [loading, setLoading] = useState(false);
   const [compileTime, setCompileTime] = useState(null);
   const [executeTime, setExecuteTime] = useState(null);
+  const [language, setLanguage] = useState('cpp');
+  const [verdicts, setVerdicts] = useState([]);
+  const [isDelayed, setIsDelayed] = useState(false);
   const { problemId } = useParams();
 
   useEffect(() => {
+    const simulateLoadingDelay = () => {
+      setTimeout(() => {
+        setIsDelayed(true);
+      }, 3000);
+    };
+
     const fetchProblem = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/problems/getProblems');
@@ -39,16 +49,41 @@ int main() {
       }
     };
 
+    simulateLoadingDelay();
     fetchProblem();
   }, [problemId]);
 
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+    setLanguage(selectedLanguage);
+    
+    if (selectedLanguage === 'cpp') {
+      setSourceCode(`
+// Sample C++ Code
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout<<"cook here";
+    return 0;
+}
+      `);
+    } else if (selectedLanguage === 'python') {
+      setSourceCode(`
+# Sample Python Code
+print('hello world')
+      `);
+    }
+  };
+
   const executeTestCases = async (testCases, hidden = false) => {
+    const results = [];
     for (let i = 0; i < testCases.length; i++) {
       const [input, expectedOutput] = testCases[i];
       console.log(`Running test case ${i + 1}:`, { input, expectedOutput });
   
       const requestPayload = {
-        language: "cpp",
+        language: language,
         code: sourceCode,
         input: input,
       };
@@ -62,42 +97,40 @@ int main() {
             responseData = JSON.parse(responseData);
           } catch (error) {
             console.error(`Error parsing response data for test case ${i + 1}:`, error);
-            return false;
+            results.push({ testCase: i + 1, verdict: 'Error' });
+            continue;
           }
         }
   
         if (responseData && typeof responseData === 'object' && 'output' in responseData) {
           const { output: outputObj, compileTime: backendCompileTime, executeTime: backendExecuteTime } = responseData;
   
-          // Display compile and execute time
           setCompileTime(backendCompileTime !== undefined ? backendCompileTime : null);
           setExecuteTime(backendExecuteTime !== undefined ? backendExecuteTime : null);
   
-          // Extract the actual output from the outputObj
           const finalOutput = outputObj.output;
   
-          // Log the outputs before comparison
           console.log(`Expected Output for test case ${i + 1}:`, expectedOutput.trim());
           console.log(`Actual Output for test case ${i + 1}:`, finalOutput.trim());
   
-          // Compare only the output part
           if (finalOutput.trim() !== expectedOutput.trim()) {
-            console.log(`Test case ${i + 1} failed:`, { finalOutput, expectedOutput });
-            return false;
+            results.push({ testCase: i + 1, verdict: 'Fail' });
+          } else {
+            results.push({ testCase: i + 1, verdict: 'Pass' });
           }
         } else {
           console.error(`Unexpected response format for test case ${i + 1}:`, responseData);
-          return false;
+          results.push({ testCase: i + 1, verdict: 'Error' });
         }
   
       } catch (error) {
         console.error(`Error executing ${hidden ? 'hidden ' : ''}test case ${i + 1}:`, error);
-        return false;
+        results.push({ testCase: i + 1, verdict: 'Error' });
       }
     }
-    return true;
+    setVerdicts(results);
+    return results.every(result => result.verdict === 'Pass');
   };
-  
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -126,56 +159,120 @@ int main() {
     }
   };
 
+  const handleRun = async () => {
+    setLoading(true);
+    try {
+      const sampleTestCases = problem.inputTests.map((input, index) => [input, problem.outputTests[index]]);
+      const sampleTestsPassed = await executeTestCases(sampleTestCases);
+      if (sampleTestsPassed) {
+        toast.success("Sample test cases passed!");
+      } else {
+        toast.error("Sample test cases failed.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while running the sample test cases.");
+      console.error("Run error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!isDelayed) {
+    return (
+      <div className="loading-container">
+        <ClimbingBoxLoader color="#3c6e71" size={30} />
+        <p>Hold up, let the site cook...</p>
+      </div>
+    );
+  }
+
   if (!problem) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <ClimbingBoxLoader color="#3c6e71" size={30} />
+        <p>Hold up, let the site cook...</p>
+      </div>
+    );
   }
 
   return (
     <div className="problem-detail-container">
       <div className="problem-detail-left">
-        <h1>{problem.problemName}</h1>
-        <p><strong>Description:</strong> {problem.problemDescription}</p>
-        <p><strong>Input Description:</strong> {problem.inputDescription}</p>
-        <p><strong>Output Description:</strong> {problem.outputDescription}</p>
-        <h3>Sample Tests:</h3>
-        {problem.inputTests.map((inputTest, index) => (
-          <div key={index}>
-            <p><strong>Sample Input {index + 1}:</strong> {inputTest}</p>
-            <p><strong>Sample Output {index + 1}:</strong> {problem.outputTests[index]}</p>
-          </div>
-        ))}
-        <button onClick={handleSubmit} className="submit-button" disabled={loading}>
-          Submit
-          {loading && (
-            <div className="loader-wrapper">
-              <CircleLoader size={25} color={"#fff"} loading={loading} />
+        <h1 className="problem-name">{problem.problemName}</h1>
+        <div className="detail-box problem-description">
+          <p><strong>Description:</strong></p>
+          <p>{problem.problemDescription}</p>
+        </div>
+        <div className="detail-box problem-input-description">
+          <p><strong>Input Description:</strong></p>
+          <p>{problem.inputDescription}</p>
+        </div>
+        <div className="detail-box problem-output-description">
+          <p><strong>Output Description:</strong></p>
+          <p>{problem.outputDescription}</p>
+        </div>
+        <div className="sample-tests-container">
+          <h3>Sample Tests:</h3>
+          {problem.inputTests.map((inputTest, index) => (
+            <div key={index} className="sample-test-container">
+              <div className="input-output-box">
+                <h4>Sample Input Test Case {index + 1}:</h4>
+                <p className="input-output-value">{inputTest}</p>
+              </div>
+              <div className="input-output-box">
+                <h4>Sample Output Test Case {index + 1}:</h4>
+                <p className="input-output-value">{problem.outputTests[index]}</p>
+              </div>
             </div>
-          )}
-        </button>
-        <p>Compile Time: {compileTime ? `${compileTime.toFixed(2)} ms` : 'N/A'}</p>
-        <p>Execute Time: {executeTime ? `${executeTime.toFixed(2)} ms` : 'N/A'}</p>
+          ))}
+        </div>
       </div>
+
       <div className="problem-detail-right">
+        <div className="language-selector-container">
+          <label htmlFor="language-selector">Select Language:</label>
+          <select
+            id="language-selector"
+            className="language-selector"
+            value={language}
+            onChange={handleLanguageChange}
+          >
+            <option value="cpp">C++</option>
+            <option value="python">Python</option>
+          </select>
+        </div>
         <MonacoEditor
+          height="calc(100vh - 250px)"
+          language={language}
           value={sourceCode}
-          onChange={(newValue) => setSourceCode(newValue)}
-          className="editor"
-          height="90vh"
+          onChange={(value) => setSourceCode(value)}
           theme="vs-dark"
-          width="100%"
-          options={{
-            fontSize: 16,
-          }}
-          defaultLanguage="cpp"
         />
-        {compileTime !== null && executeTime !== null && (
-          <div className="time-info">
-            <p><strong>Compilation Time:</strong> {compileTime.toFixed(2)} ms</p>
-            <p><strong>Execution Time:</strong> {executeTime.toFixed(2)} ms</p>
+        <div className="button-container">
+          <button className="run-button" onClick={handleRun} disabled={loading}>Run</button>
+          <button className="submit-button" onClick={handleSubmit} disabled={loading}>Submit</button>
+        </div>
+        {loading && (
+          <div className="loader-wrapper">
+            <CircleLoader color="#3c6e71" size={40} />
           </div>
         )}
+        <div className="verdicts-container">
+          {verdicts.length > 0 && (
+            <div>
+              <h3>Verdicts:</h3>
+              <ul>
+                {verdicts.map((verdict, index) => (
+                  <li key={index}>
+                    Test Case {verdict.testCase}: {verdict.verdict}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-      <ToastContainer position="bottom-right" theme="dark" />
+      <ToastContainer />
     </div>
   );
 };
