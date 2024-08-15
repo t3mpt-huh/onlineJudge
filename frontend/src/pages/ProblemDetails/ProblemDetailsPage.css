@@ -1,42 +1,44 @@
-/* ProblemDetailsPage.css */
 .problem-detail-container {
   display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.problem-detail-left,
-.problem-detail-right {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  min-width: 200px; /* Minimum width for resizing */
+  height: calc(100vh - 20px); /* Maintain height adjustment for spacing */
+  margin: 10px;
+  overflow: hidden; /* Prevent body overflow */
 }
 
 .problem-detail-left {
-  background-color: black;
-  border-right: 1px solid #ccc;
+  flex: 35;
+  padding: 20px;
+  overflow-y: auto;
+  margin-right: 10px;
+  background-color: #121212; /* Dark background for the left panel */
+  color: #e0e0e0; /* Light text color */
+  border: 2px solid #333; /* Consistent border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Slightly more intense shadow */
+  min-width: 300px; /* Minimum width for smaller screens */
 }
 
-.problem-detail-right {
-  background-color: #000;
-}
-
-.problem-name {
-  text-align: center;
+/* Heading Styles */
+.problem-name, h1, h3, h4 {
+  color: #e0e0e0; /* Consistent light text color for headings */
   margin-bottom: 20px;
-  font-size: 28px;
-  color: #ccc;
 }
 
+/* Detail Box Styles */
 .detail-box {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  border: 1px solid #444; /* Darker border for detail boxes */
+  padding: 15px; /* Increased padding for readability */
   border-radius: 5px;
-  background-color: #343a40;
+  background-color: #1e1e1e; /* Slightly lighter dark background */
+  color: #e0e0e0; /* Light text color */
 }
 
+.detail-box p {
+  margin: 0;
+}
+
+/* Sample Test Styles */
 .sample-tests-container {
   margin-top: 20px;
 }
@@ -46,94 +48,184 @@
 }
 
 .input-output-box {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #343a40;
+  margin-bottom: 10px;
 }
 
 .input-output-box h4 {
   margin: 0 0 5px 0;
+  color: #e0e0e0; /* Light text color for subheadings */
 }
 
 .input-output-value {
-  margin: 0;
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  background-color: #343a40;
-}
-
-.language-selector-container {
-  margin-bottom: 10px;
-}
-
-.language-selector {
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-}
-
-.execute-container {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.run-button,
-.submit-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #3c6e71;
-  color: #fff;
-  cursor: pointer;
-  font-size: 16px;
-  margin-right: 10px;
-}
-
-.run-button:hover,
-.submit-button:hover {
-  background-color: #213d3f;
-}
-
-.loader-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 10px;
-}
-
-.input-output-container {
-  margin-top: 20px;
-}
-
-.input-area-wrapper,
-.output-area-wrapper,
-.verdict-area-wrapper {
-  margin-bottom: 10px;
-}
-
-.input-area,
-.output-area,
-.verdict-area {
-  width: 100%;
-  height: 150px;
+  background-color: #2c2c2c; /* Darker background for input/output values */
+  border: 1px solid #444; /* Dark border for contrast */
   padding: 10px;
-  border: 1px solid #ddd;
   border-radius: 5px;
-  resize: vertical;
+  color: #e0e0e0; /* Light text color */
+  word-break: break-all;
 }
 
-.time-info {
-  margin-top: 10px;
+/* Loading Container Styles */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #e0e0e0; /* Light text color */
 }
 
-/* Resizer styles */
-.resizer {
-  width: 10px;
-  cursor: ew-resize;
-  background-color: #ddd;
-  position: relative;
-  z-index: 1;
+.problem-detail-right { 
+  flex: 40;
+  padding: 20px;
+  overflow-y: auto;
+  margin-right: 10px; /* Adjust spacing between columns */
+  background-color: #222; /* Dark background for the right panel */
+  color: #e0e0e0; /* Light text color */
+  border: 2px solid #333; /* Consistent border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+.problem-detail-third { 
+  flex: 25;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #222; /* Dark background for the third panel */
+  color: #e0e0e0; /* Light text color */
+  min-width: 300px; /* Minimum width for smaller screens */
+  border: 2px solid #333; /* Consistent border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
+}
+
+.MonacoEditor {
+  height: calc(50vh - 50px); /* Adjust editor height */
+  border: 1px solid #555; /* Consistent border */
+  border-radius: 5px; /* Rounded corners */
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #333; /* Dark background for the editor header */
+  color: white;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.editor-header select,
+.editor-header button {
+  margin: 0 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+}
+
+.editor-header select {
+  background-color: #555; /* Dark background for select dropdown */
+  color: white;
+}
+
+.editor-header button {
+  background-color: #007bff; /* Button background color */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.editor-header button:disabled {
+  background-color: #aaa; /* Disabled button background */
+  cursor: not-allowed;
+}
+
+.editor-header button:not(:disabled):hover {
+  background-color: #0056b3; /* Button hover effect */
+}
+
+.verdict-list {
+  padding: 15px;
+  background-color: #1e1e1e; /* Slightly lighter dark background */
+  border-radius: 8px; /* Rounded corners */
+  color: #f5f5f5; /* Softer white text */
+  max-height: 350px; /* Larger max height */
+  overflow-y: auto; /* Scroll behavior for overflow */
+  border: 1px solid #333; /* Add border for contrast */
+}
+
+.verdict-list ul {
+  list-style: none; /* Remove default bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+.verdict-list li {
+  padding: 8px 12px; /* Increase padding for spacing */
+  margin-bottom: 6px; /* Space between items */
+  border-radius: 5px; /* Rounded list items */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.verdict-list li.pass {
+  background-color: #2e7d32; /* Dark green for passed */
+  color: #a5d6a7; /* Softer green text */
+}
+
+.verdict-list li.fail {
+  background-color: #c62828; /* Dark red for failed */
+  color: #ef9a9a; /* Softer red text */
+}
+
+.verdict-list li.error {
+  background-color: #f57c00; /* Darker orange for errors */
+  color: #ffe0b2; /* Softer orange text */
+}
+
+/* Hover effect for list items */
+.verdict-list li:hover {
+  background-color: #444; /* Dark gray hover background */
+}
+
+.problem-detail-third textarea {
+  width: 100%;
+  resize: none;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  border: 1px solid #444; /* Darker border for textarea */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #333; /* Dark background */
+  color: #fff; /* Light text color */
+  margin-bottom: 10px;
+  height: 50px; /* Increase the height of the textarea */
+}
+
+.problem-detail-third button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745; /* Green background for buttons */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.problem-detail-third button:disabled {
+  background-color: #aaa; /* Disabled button background */
+  cursor: not-allowed;
+}
+
+.problem-detail-third button:not(:disabled):hover {
+  background-color: #218838; /* Button hover effect */
+}
+
+textarea {
+  background-color: #333; /* Dark background */
+  color: #fff; /* Light text color */
+  border: 1px solid #444; /* Darker border */
 }

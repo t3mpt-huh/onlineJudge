@@ -17,19 +17,22 @@ export const ProblemDetailPage = () => {
 using namespace std;
 
 int main() {
-    int a, b;
-    cin >> a >> b;
-    cout << "Sum is: " << (a + b) << endl;
+    cout<<"cook here";
     return 0;
 }
   `);
   const [loading, setLoading] = useState(false);
+  const [runLoading, setRunLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [executeLoading, setExecuteLoading] = useState(false);
   const [compileTime, setCompileTime] = useState(null);
   const [executeTime, setExecuteTime] = useState(null);
   const [language, setLanguage] = useState('cpp');
   const [verdicts, setVerdicts] = useState([]);
   const [isDelayed, setIsDelayed] = useState(false);
   const { problemId } = useParams();
+  const [userInput, setUserInput] = useState('');
+  const [userOutput, setUserOutput] = useState('');
 
   useEffect(() => {
     const simulateLoadingDelay = () => {
@@ -52,6 +55,43 @@ int main() {
     simulateLoadingDelay();
     fetchProblem();
   }, [problemId]);
+
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+      const container = document.querySelector('.problem-detail-container');
+      const left = document.querySelector('.problem-detail-left');
+      const right = document.querySelector('.problem-detail-right');
+      const third = document.querySelector('.problem-detail-third');
+
+      const containerWidth = container.getBoundingClientRect().width;
+      const offsetX = e.clientX / containerWidth;
+
+      left.style.flex = offsetX;
+      right.style.flex = 1 - offsetX / 2;
+      third.style.flex = 1 - offsetX / 2;
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    const resizers = document.querySelectorAll('.resizer');
+    resizers.forEach(resizer => {
+      resizer.addEventListener('mousedown', handleMouseDown);
+    });
+
+    return () => {
+      resizers.forEach(resizer => {
+        resizer.removeEventListener('mousedown', handleMouseDown);
+      });
+    };
+  }, []);
 
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
@@ -76,11 +116,12 @@ print('hello world')
     }
   };
 
-  const executeTestCases = async (testCases, hidden = false) => {
+  const executeTestCases = async (testCases, isHidden = false) => {
     const results = [];
+    
     for (let i = 0; i < testCases.length; i++) {
       const [input, expectedOutput] = testCases[i];
-      console.log(`Running test case ${i + 1}:`, { input, expectedOutput });
+      console.log(`Running ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, { input, expectedOutput });
   
       const requestPayload = {
         language: language,
@@ -96,8 +137,8 @@ print('hello world')
           try {
             responseData = JSON.parse(responseData);
           } catch (error) {
-            console.error(`Error parsing response data for test case ${i + 1}:`, error);
-            results.push({ testCase: i + 1, verdict: 'Error' });
+            console.error(`Error parsing response data for ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, error);
+            results.push({ testCase: `${isHidden ? 'Hidden' : 'Sample'} Test Case ${i + 1}`, verdict: 'Error' });
             continue;
           }
         }
@@ -108,171 +149,252 @@ print('hello world')
           setCompileTime(backendCompileTime !== undefined ? backendCompileTime : null);
           setExecuteTime(backendExecuteTime !== undefined ? backendExecuteTime : null);
   
-          const finalOutput = outputObj.output;
+          const finalOutput = outputObj.output.trim();
   
-          console.log(`Expected Output for test case ${i + 1}:`, expectedOutput.trim());
-          console.log(`Actual Output for test case ${i + 1}:`, finalOutput.trim());
+          console.log(`Expected Output for ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, expectedOutput.trim());
+          console.log(`Actual Output for ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, finalOutput);
   
-          if (finalOutput.trim() !== expectedOutput.trim()) {
-            results.push({ testCase: i + 1, verdict: 'Fail' });
+          if (finalOutput !== expectedOutput.trim()) {
+            results.push({ testCase: `${isHidden ? 'Hidden' : 'Sample'} Test Case ${i + 1}`, verdict: 'Failed' });
           } else {
-            results.push({ testCase: i + 1, verdict: 'Pass' });
+            results.push({ testCase: `${isHidden ? 'Hidden' : 'Sample'} Test Case ${i + 1}`, verdict: 'Passed' });
           }
         } else {
-          console.error(`Unexpected response format for test case ${i + 1}:`, responseData);
-          results.push({ testCase: i + 1, verdict: 'Error' });
+          console.error(`Unexpected response format for ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, responseData);
+          results.push({ testCase: `${isHidden ? 'Hidden' : 'Sample'} Test Case ${i + 1}`, verdict: 'Error' });
         }
   
       } catch (error) {
-        console.error(`Error executing ${hidden ? 'hidden ' : ''}test case ${i + 1}:`, error);
-        results.push({ testCase: i + 1, verdict: 'Error' });
+        console.error(`Error executing ${isHidden ? 'hidden ' : ''}test case ${i + 1}:`, error);
+        results.push({ testCase: `${isHidden ? 'Hidden' : 'Sample'} Test Case ${i + 1}`, verdict: 'Error' });
       }
     }
+  
+    // Set the full verdict results array
     setVerdicts(results);
-    return results.every(result => result.verdict === 'Pass');
+  
+    // Return the full array of results for further processing
+    return results;
   };
+  
+  
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setSubmitLoading(true);
     try {
+      // Prepare sample and hidden test cases
       const sampleTestCases = problem.inputTests.map((input, index) => [input, problem.outputTests[index]]);
       const hiddenTestCases = problem.hiddenInputTests.map((input, index) => [input, problem.hiddenOutputTests[index]]);
-
-      const sampleTestsPassed = await executeTestCases(sampleTestCases);
+  
+      // Execute sample and hidden test cases and retrieve the results
+      const sampleTestsResults = await executeTestCases(sampleTestCases);
+      const hiddenTestsResults = await executeTestCases(hiddenTestCases, true);
+  
+      // Combine sample and hidden test results into a single array
+      const allTestResults = [...sampleTestsResults, ...hiddenTestsResults];
+  
+      // Display verdicts for both sample and hidden test cases
+      setVerdicts(allTestResults);
+  
+      // Check for pass/fail statuses and show toast notifications
+      const sampleTestsPassed = sampleTestsResults.every(result => result.verdict === 'Passed');
+      const hiddenTestsPassed = hiddenTestsResults.every(result => result.verdict === 'Passed');
+  
       if (!sampleTestsPassed) {
-        toast.error("Sample test cases failed.");
-        setLoading(false);
-        return;
-      }
-
-      const hiddenTestsPassed = await executeTestCases(hiddenTestCases, true);
-      if (hiddenTestsPassed) {
-        toast.success("All test cases passed! Problem solved!");
+        toast.error("Some sample test cases failed.");
       } else {
-        toast.error("One or more hidden test cases failed.");
+        toast.success("All sample test cases passed!");
       }
+  
+      if (!hiddenTestsPassed) {
+        toast.error("One or more hidden test cases failed.");
+      } else if (sampleTestsPassed && hiddenTestsPassed) {
+        toast.success("All test cases passed! Problem solved!");
+      }
+  
     } catch (error) {
       toast.error("An error occurred while submitting the code.");
       console.error("Submission error:", error);
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
-
+  
+  
+  
   const handleRun = async () => {
-    setLoading(true);
+    setRunLoading(true);
     try {
+      // Construct test cases from problem input and output
       const sampleTestCases = problem.inputTests.map((input, index) => [input, problem.outputTests[index]]);
-      const sampleTestsPassed = await executeTestCases(sampleTestCases);
-      if (sampleTestsPassed) {
+      
+      // Execute the test cases
+      const results = await executeTestCases(sampleTestCases);
+      
+      // Check if all test cases passed
+      const allPassed = results.every(result => result.verdict === 'Passed');
+      
+      if (allPassed) {
         toast.success("Sample test cases passed!");
       } else {
         toast.error("Sample test cases failed.");
       }
+      
+      // Optionally log results for debugging
+      console.log("Test case results:", results);
     } catch (error) {
       toast.error("An error occurred while running the sample test cases.");
       console.error("Run error:", error);
     } finally {
-      setLoading(false);
+      setRunLoading(false);
     }
   };
+  
 
-  if (!isDelayed) {
-    return (
-      <div className="loading-container">
-        <ClimbingBoxLoader color="#3c6e71" size={30} />
-        <p>Hold up, let the site cook...</p>
-      </div>
-    );
-  }
-
-  if (!problem) {
-    return (
-      <div className="loading-container">
-        <ClimbingBoxLoader color="#3c6e71" size={30} />
-        <p>Hold up, let the site cook...</p>
-      </div>
-    );
-  }
+  const handleExecute = async () => {
+    setExecuteLoading(true);
+    try {
+      const requestPayload = {
+        language: language,
+        code: sourceCode,
+        input: userInput,
+      };
+      const response = await axios.post("http://localhost:8080/compile", requestPayload);
+  
+      let responseData = response.data;
+      if (typeof responseData === 'string') {
+        try {
+          responseData = JSON.parse(responseData);
+        } catch (error) {
+          console.error(`Error parsing response data:`, error);
+          setUserOutput('Error');
+          return;
+        }
+      }
+  
+      if (responseData && typeof responseData === 'object' && 'output' in responseData) {
+        const { output: outputObj } = responseData;
+        const finalOutput = outputObj.output;
+        setUserOutput(finalOutput);
+      } else {
+        console.error(`Unexpected response format:`, responseData);
+        setUserOutput('Error');
+      }
+    } catch (error) {
+      console.error("Execution error:", error);
+      setUserOutput('Error');
+    } finally {
+      setExecuteLoading(false);
+    }
+  };
 
   return (
     <div className="problem-detail-container">
       <div className="problem-detail-left">
-        <h1 className="problem-name">{problem.problemName}</h1>
-        <div className="detail-box problem-description">
-          <p><strong>Description:</strong></p>
-          <p>{problem.problemDescription}</p>
-        </div>
-        <div className="detail-box problem-input-description">
-          <p><strong>Input Description:</strong></p>
-          <p>{problem.inputDescription}</p>
-        </div>
-        <div className="detail-box problem-output-description">
-          <p><strong>Output Description:</strong></p>
-          <p>{problem.outputDescription}</p>
-        </div>
-        <div className="sample-tests-container">
-          <h3>Sample Tests:</h3>
-          {problem.inputTests.map((inputTest, index) => (
-            <div key={index} className="sample-test-container">
-              <div className="input-output-box">
-                <h4>Sample Input Test Case {index + 1}:</h4>
-                <p className="input-output-value">{inputTest}</p>
-              </div>
-              <div className="input-output-box">
-                <h4>Sample Output Test Case {index + 1}:</h4>
-                <p className="input-output-value">{problem.outputTests[index]}</p>
-              </div>
+        {problem ? (
+          <>
+            <h1 className="problem-name">{problem.problemName}</h1>
+            <div className="detail-box problem-description">
+              <p><strong>Description:</strong></p>
+              <p>{problem.problemDescription}</p>
             </div>
-          ))}
-        </div>
+            <div className="detail-box problem-input-description">
+              <p><strong>Input Description:</strong></p>
+              <p>{problem.inputDescription}</p>
+            </div>
+            <div className="detail-box problem-output-description">
+              <p><strong>Output Description:</strong></p>
+              <p>{problem.outputDescription}</p>
+            </div>
+            <div className="sample-tests-container">
+              <h3>Sample Tests:</h3>
+              {problem.inputTests.map((inputTest, index) => (
+                <div key={index} className="sample-test-container">
+                  <div className="input-output-box">
+                    <h4>Sample Input Test Case {index + 1}:</h4>
+                    <p className="input-output-value">{inputTest}</p>
+                  </div>
+                  <div className="input-output-box">
+                    <h4>Sample Output Test Case {index + 1}:</h4>
+                    <p className="input-output-value">{problem.outputTests[index]}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="loading-container">
+            {isDelayed ? (
+              <CircleLoader color="#007bff" loading={loading} size={100} />
+            ) : (
+              <p>Loading problem...</p>
+            )}
+          </div>
+        )}
       </div>
-
+  
       <div className="problem-detail-right">
-        <div className="language-selector-container">
-          <label htmlFor="language-selector">Select Language:</label>
-          <select
-            id="language-selector"
-            className="language-selector"
-            value={language}
-            onChange={handleLanguageChange}
-          >
+        <div className="editor-header">
+          <select value={language} onChange={handleLanguageChange}>
             <option value="cpp">C++</option>
             <option value="python">Python</option>
           </select>
+          <button onClick={handleRun} disabled={runLoading} className="button">
+            <div className="button-content">
+              {runLoading ? <CircleLoader color="#fff" loading={runLoading} size={10} className="loader" /> : 'Run'}
+            </div>
+          </button>
+  
+          <button onClick={handleSubmit} disabled={submitLoading} className="button">
+            <div className="button-content">
+              {submitLoading ? (
+                <CircleLoader color="#fff" loading={submitLoading} size={10} className="loader" />
+              ) : 'Submit'}
+            </div>
+          </button>
         </div>
         <MonacoEditor
-          height="calc(100vh - 250px)"
+          height="50vh"
           language={language}
           value={sourceCode}
-          onChange={(value) => setSourceCode(value)}
+          onChange={setSourceCode}
           theme="vs-dark"
         />
-        <div className="button-container">
-          <button className="run-button" onClick={handleRun} disabled={loading}>Run</button>
-          <button className="submit-button" onClick={handleSubmit} disabled={loading}>Submit</button>
+        <div className="verdict-list">
+          <h3>Verdicts</h3>
+          <ul>
+            {verdicts.map((verdict, index) => (
+              <li
+                key={index}
+                className={
+                  verdict.verdict === 'Passed' ? 'pass' :
+                  verdict.verdict === 'Failed' ? 'fail' :
+                  verdict.verdict === 'Error' ? 'error' :
+                  ''  // Default case if verdict is none of the above
+                }
+              >
+                {verdict.testCase}: {verdict.verdict}
+              </li>
+            ))}
+          </ul>
         </div>
-        {loading && (
-          <div className="loader-wrapper">
-            <CircleLoader color="#3c6e71" size={40} />
-          </div>
-        )}
-        <div className="verdicts-container">
-          {verdicts.length > 0 && (
-            <div>
-              <h3>Verdicts:</h3>
-              <ul>
-                {verdicts.map((verdict, index) => (
-                  <li key={index}>
-                    Test Case {verdict.testCase}: {verdict.verdict}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+      </div>
+  
+      <div className="problem-detail-third">
+        <h3>Try for Custom Input</h3>
+        <textarea
+          placeholder="Enter custom input"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+        />
+        <button onClick={handleExecute} disabled={executeLoading}>
+          {executeLoading ? <CircleLoader color="#fff" loading={executeLoading} size={15} /> : 'Execute'}
+        </button>
+        <h3>Output</h3>
+        <textarea readOnly placeholder="Output will appear here" value={userOutput} />
       </div>
       <ToastContainer />
     </div>
   );
+  
 };

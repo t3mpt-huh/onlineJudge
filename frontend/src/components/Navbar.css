@@ -16,7 +16,7 @@ body {
 
 /* Navbar styling */
 .nav {
-    background-color: #3c6e71; /* Updated background color */
+    background-color: #1d3557; /* Updated background color */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -65,28 +65,36 @@ body {
 
 /* Styling for logout button */
 .logout-button {
-    background-color: red; /* Red background */
-    border: 2px solid red; /* Red border */
-    color: white; /* White text color */
-    border-radius: 8px; /* Rounded corners */
+    background-color: transparent; /*Red background */
+    border: 2px solid orange; /* Red border */
+    color: orange; /* White text color */
+    border-radius: 16px; /* Rounded corners */
     padding: 8px 16px; /* Padding for button */
-    font-size: 1rem; /* Font size */
+    font-size: 1rem; /*Font size */
     cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s, border-color 0.3s, transform 0.3s; /* Transition for hover effects */
+    transition: transform 0.3s ease;
     text-align: center;
-    border: none; /* Remove default border */
-    display: inline-block; /* Ensure it behaves like a button */
+    /* justify-content: center; */
+    /* border: none; Remove default border */
+    display: inline-block; /*Ensure it behaves like a button */
+    /* margin-top : 100px; */
+    /* align-items: center; */
+    transform: translateY(-10px);
    
 }
 
 .logout-button:hover {
-    background-color: darkred; /* Darker red on hover */
-    border-color: darkred; /* Darker border on hover */
-    transform: translateY(-2px); /* Slight lift effect on hover */
-    transform: translateX(-2px); /* Slight lift effect on hover */
+    /* background-color: orange; Darker red on hover */
+    border-color: red; /* Darker border on hover */
+    color : red;
+    text-align: center;
+    display: inline-block;
+    background-color: transparent;
+    transform: translateY(-12px); 
+    transform: translateX(1px); 
 }
 
 .logout-button:active {
-    /* transform: translateY(1px); Slightly pressed effect on click */
-    transform: translateX(-2px); /* Slight lift effect on hover */
+    transform: translateY(1px); /*Slightly pressed effect on click*/
+    transform: translateX(-10px); /* Slight lift effect on hover */
 }
