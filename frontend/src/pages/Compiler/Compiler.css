@@ -1,113 +1,178 @@
+/* Root container for the compiler */
 .compiler-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Header section */
 .header {
+  width: 100%;
+  padding: 1rem;
+  background-color: #252526;
   text-align: center;
-  padding: 10px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
+  border-bottom: 2px solid #007acc;
 }
 
+/* Main content layout */
 .main-content {
   display: flex;
-  flex: 1;
+  width: 90%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
+/* Editor section */
 .editor-section {
-  width: 50%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  background-color: #1e1e1e;
+  margin-right: 1rem;
+  border: 1px solid #3c3c3c;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
+/* Language selector */
 .language-selector {
-  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: #252526;
+  border-bottom: 1px solid #3c3c3c;
 }
 
+.language-selector label {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.language-selector select {
+  background-color: #3c3c3c;
+  color: #ffffff;
+  border: none;
+  padding: 0.3rem;
+  border-radius: 3px;
+}
+
+/* Monaco editor styling */
 .editor {
-  flex: 1; /* Fit the editor within the available space */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: calc(100vh - 130px); /* Adjusted height */
+  flex: 1;
+  background-color: #1e1e1e;
 }
 
+/* Result section */
 .result-section {
-  width: 50%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  background-color: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.input-area-wrapper,
-.output-area-wrapper {
-  width: 80%; /* Ensure both stretch to the same width */
-  margin-bottom: 10px; /* Space between input and output */
+/* Input area styling */
+.input-area-wrapper {
+  padding: 0.5rem;
+  background-color: #252526;
+  border-bottom: 1px solid #3c3c3c;
 }
 
-.input-area,
-.output-area {
-  height: 186px; /* Same height for symmetry */
-  width: 100%; /* Stretch to fill the width of the wrapper */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  background-color: #d9d9d9;
-  resize: vertical;
+.input-area {
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
 }
 
+/* Execute button container */
 .execute-container {
   display: flex;
-  align-items: center; /* Center items vertically */
-  margin-bottom: 10px; /* Space between the message and button */
-  width: 80%; /* Same width as input and output area wrappers */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: #252526;
 }
 
 .execute-message {
-  display: inline-block;
-  vertical-align: middle; /* Align middle */
-  margin-right: 10px; /* Space between text and button */
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .execute-button {
-  display: inline-block;
-  vertical-align: middle; /* Align middle */
-  padding: 10px 20px;
+  padding: 0.5rem 1rem;
+  background-color: #007acc;
+  color: #ffffff;
   border: none;
-  border-radius: 4px;
-  background-color: #3c6e71;
-  color: #fff;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 16px;
-  position: relative;
-  bottom : 10px;
+  transition: background-color 0.3s ease;
 }
 
-.execute-button:hover {
-  background-color: #213d3f;
+.execute-button:disabled {
+  background-color: #3c3c3c;
+  cursor: not-allowed;
 }
 
+.execute-button:hover:not(:disabled) {
+  background-color: #005a9e;
+}
+
+/* Loader wrapper */
 .loader-wrapper {
-  margin-left: 10px; /* Space between button and loader */
-  display: flex;
-  align-items: center;
+  margin-left: 1rem;
 }
 
+/* Output area styling */
+.output-area-wrapper {
+  flex: 1;
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  border-top: 1px solid #3c3c3c;
+  overflow: auto;
+}
+
+.output-area {
+  width: 100%;
+  height: 75%;
+  padding: 0.5rem;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.output-area.error {
+  color: #ff4c4c;
+}
+
+/* Time info */
 .time-info {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #252526;
+  border-radius: 3px;
 }
 
 .time-info p {
-  margin: 5px 0;
-}
-
-/* Add this CSS class for the error styling */
-.output-area.error {
-  color: red;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9cdcfe;
 }

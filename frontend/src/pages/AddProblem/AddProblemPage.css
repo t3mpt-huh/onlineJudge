@@ -1,0 +1,56 @@
+.add-problem-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2b2b2b;
+    color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .add-problem-container h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+  
+  .add-problem-container label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .add-problem-container input[type="text"],
+  .add-problem-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+  
+  .add-problem-container button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .add-problem-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .add-problem-container .section-title {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #cccccc;
+  }
+  

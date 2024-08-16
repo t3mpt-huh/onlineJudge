@@ -1,8 +1,7 @@
-// src/pages/AddProblem/AddProblemPage.jsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './AddProblemPage.css'; // Assuming you've created the CSS file I provided earlier
 
 export const AddProblemPage = () => {
   const [problem, setProblem] = useState({
@@ -36,15 +35,40 @@ export const AddProblemPage = () => {
     }));
   };
 
-  const handleAddField = (arrayName) => {
-    setProblem((prevState) => ({
-      ...prevState,
-      [arrayName]: [...prevState[arrayName], ''],
-    }));
+  const handleAddField = (arrayName, correspondingArrayName) => {
+    setProblem((prevState) => {
+      const updatedArray = [...prevState[arrayName], ''];
+      const updatedCorrespondingArray = [...prevState[correspondingArrayName]];
+
+      // Ensure the corresponding array also has the same number of fields
+      if (updatedCorrespondingArray.length < updatedArray.length) {
+        updatedCorrespondingArray.push('');
+      }
+
+      return {
+        ...prevState,
+        [arrayName]: updatedArray,
+        [correspondingArrayName]: updatedCorrespondingArray,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const { inputTests, outputTests, hiddenInputTests, hiddenOutputTests } = problem;
+
+    // Enforce that each input test has a corresponding output test
+    if (inputTests.length !== outputTests.length) {
+      alert('Please ensure each input test has a corresponding output test.');
+      return;
+    }
+
+    if (hiddenInputTests.length !== hiddenOutputTests.length) {
+      alert('Please ensure each hidden input test has a corresponding hidden output test.');
+      return;
+    }
+
     try {
       console.log('Submitting problem:', problem); // Log problem data
       await axios.post('http://localhost:5000/api/problems/addProblem', problem);
@@ -61,7 +85,7 @@ export const AddProblemPage = () => {
   };
 
   return (
-    <div>
+    <div className="add-problem-container">
       <h1>Add Problem</h1>
       <form onSubmit={handleSubmit}>
         <label>
@@ -80,7 +104,8 @@ export const AddProblemPage = () => {
           Output Description:
           <textarea name="outputDescription" value={problem.outputDescription} onChange={handleChange} />
         </label>
-        <h3>Input Tests</h3>
+
+        <h3 className="section-title">Input Tests</h3>
         {problem.inputTests.map((test, index) => (
           <input
             key={index}
@@ -89,8 +114,9 @@ export const AddProblemPage = () => {
             onChange={(e) => handleArrayChange(e, index, 'inputTests')}
           />
         ))}
-        <button type="button" onClick={() => handleAddField('inputTests')}>Add Input Test</button>
-        <h3>Output Tests</h3>
+        <button type="button" onClick={() => handleAddField('inputTests', 'outputTests')}>Add Input Test</button>
+
+        <h3 className="section-title">Output Tests</h3>
         {problem.outputTests.map((test, index) => (
           <input
             key={index}
@@ -99,8 +125,9 @@ export const AddProblemPage = () => {
             onChange={(e) => handleArrayChange(e, index, 'outputTests')}
           />
         ))}
-        <button type="button" onClick={() => handleAddField('outputTests')}>Add Output Test</button>
-        <h3>Hidden Input Tests</h3>
+        <button type="button" onClick={() => handleAddField('outputTests', 'inputTests')}>Add Output Test</button>
+
+        <h3 className="section-title">Hidden Input Tests</h3>
         {problem.hiddenInputTests.map((test, index) => (
           <input
             key={index}
@@ -109,8 +136,9 @@ export const AddProblemPage = () => {
             onChange={(e) => handleArrayChange(e, index, 'hiddenInputTests')}
           />
         ))}
-        <button type="button" onClick={() => handleAddField('hiddenInputTests')}>Add Hidden Input Test</button>
-        <h3>Hidden Output Tests</h3>
+        <button type="button" onClick={() => handleAddField('hiddenInputTests', 'hiddenOutputTests')}>Add Hidden Input Test</button>
+
+        <h3 className="section-title">Hidden Output Tests</h3>
         {problem.hiddenOutputTests.map((test, index) => (
           <input
             key={index}
@@ -119,7 +147,8 @@ export const AddProblemPage = () => {
             onChange={(e) => handleArrayChange(e, index, 'hiddenOutputTests')}
           />
         ))}
-        <button type="button" onClick={() => handleAddField('hiddenOutputTests')}>Add Hidden Output Test</button>
+        <button type="button" onClick={() => handleAddField('hiddenOutputTests', 'hiddenInputTests')}>Add Hidden Output Test</button>
+
         <button type="submit">Add Problem</button>
       </form>
     </div>
