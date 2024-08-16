@@ -49,7 +49,29 @@ body {
     display: flex;
     align-items: center;
     padding: 0.25rem;
-    transition: transform 0.3s ease;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+/* Add an underline animation on hover for general links */
+.nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: orange;
+    transition: width 0.3s ease;
+}
+
+.nav a:hover::after {
+    width: 100%;
+}
+
+/* Remove underline effect for register and login links */
+.nav .no-underline::after {
+    content: none;
 }
 
 /* Active link background color */
@@ -60,41 +82,53 @@ body {
 
 /* Hover effect for links */
 .nav a:hover {
-    transform: translate(-1px, -1px); /* Moves the link slightly to the top left */
+    color: orange;
 }
 
 /* Styling for logout button */
 .logout-button {
-    background-color: transparent; /*Red background */
-    border: 2px solid orange; /* Red border */
-    color: orange; /* White text color */
-    border-radius: 16px; /* Rounded corners */
-    padding: 8px 16px; /* Padding for button */
-    font-size: 1rem; /*Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: transform 0.3s ease;
-    text-align: center;
-    /* justify-content: center; */
-    /* border: none; Remove default border */
-    display: inline-block; /*Ensure it behaves like a button */
-    /* margin-top : 100px; */
-    /* align-items: center; */
-    transform: translateY(-10px);
-   
+    background-color: transparent;
+    border: 2px solid #f48c06;
+    color: #f48c06;
+    border-radius: 16px;
+    padding: 6px 12px; /* Slightly smaller padding */
+    font-size: 0.875rem; /* Smaller font size */
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    display: inline-block;
 }
 
 .logout-button:hover {
-    /* background-color: orange; Darker red on hover */
-    border-color: red; /* Darker border on hover */
-    color : red;
-    text-align: center;
-    display: inline-block;
+    border-color: #dc2f02;
+    color: #dc2f02;
     background-color: transparent;
-    transform: translateY(-12px); 
-    transform: translateX(1px); 
+    /* No transform or background change */
 }
 
 .logout-button:active {
-    transform: translateY(1px); /*Slightly pressed effect on click*/
-    transform: translateX(-10px); /* Slight lift effect on hover */
+    transform: translateY(1px); /* Slightly pressed effect on click */
+}
+
+/* Styling for register and login links */
+.nav .green-button {
+    background-color: transparent;
+    border: 1px solid #80b918; /* Smaller border */
+    color: #80b918;
+    border-radius: 16px;
+    padding: 6px 12px; /* Smaller padding */
+    font-size: 0.875rem; /* Smaller font size */
+    cursor: pointer;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    display: inline-block;
+}
+
+/* No underline effect on hover for register and login links */
+.nav .green-button:hover {
+    color: #dddf00;
+    border-color: #dddf00;
+}
+
+/* Ensure register and login links do not have underline animation */
+.nav .green-button::after {
+    content: none;
 }

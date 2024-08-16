@@ -393,7 +393,19 @@ print('hello world')
         <h3>Output</h3>
         <textarea readOnly placeholder="Output will appear here" value={userOutput} />
       </div>
-      <ToastContainer />
+      <ToastContainer
+position="bottom-right"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="dark"
+transition: Bounce
+   />
     </div>
   );
   

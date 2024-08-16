@@ -7,6 +7,9 @@ import { Login } from './pages/Login/Login';
 import { About } from './pages/AboutPage/About';
 import { Footer } from './components/Footer/Footer';
 
+import { NotAdmin } from './pages/Redirect/NotAdmin';
+import { NotSignedIn } from './pages/Redirect/NotSignedIn';
+
 import { Compiler } from './pages/Compiler/Compiler';
 import { ProblemsPage } from './pages/Problems/ProblemsPage';
 import { ProblemDetailPage } from './pages/ProblemDetails/ProblemDetailsPage';
@@ -29,9 +32,18 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/notadmin" element={<NotAdmin />} />
+          <Route path="/notsignedin" element={<NotSignedIn />} />
           
           <Route path="/about" element={<About />} />
-          <Route path="/compiler" element={<Compiler />} />
+          <Route
+            path="/compiler"
+            element={
+              <PrivateRoute>
+                <Compiler />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/problems"
             element={

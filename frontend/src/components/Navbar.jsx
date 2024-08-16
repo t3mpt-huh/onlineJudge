@@ -26,6 +26,9 @@ export const Navbar = () => {
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
+            <li>
+              <NavLink to="/admin">Admin</NavLink>
+            </li>
             {user ? (
               <li>
                 <button className="logout-button" onClick={logout}>Logout</button>
@@ -33,10 +36,10 @@ export const Navbar = () => {
             ) : (
               <>
                 <li>
-                  <NavLink to="/register">Register</NavLink>
+                <NavLink to="/register" className="green-button">Register</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/login">Login</NavLink>
+                <NavLink to="/login" className="green-button">Login</NavLink>
                 </li>
               </>
             )}

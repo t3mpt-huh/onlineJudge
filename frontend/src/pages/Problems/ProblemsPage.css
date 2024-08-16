@@ -1,40 +1,67 @@
-/* General styles for the Problems Page */
+/* ProblemsPage.css */
+
 .problems-page {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #1b1b2f;
+  min-height: 100vh;
+  box-sizing: border-box;
+  color: #f0f0f0;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #e94560;
+}
+
+.problems-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 800px;
+}
+
+.problem-item {
+  background-color: #162447;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.problem-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: #1f4068;
+}
+
+.problem-link {
+  text-decoration: none;
+  color: #00adb5;
+  font-size: 18px;
+  font-weight: 500;
+  display: block;
+}
+
+.problem-link:hover {
+  color: #00fff5;
+}
+
+@media (max-width: 600px) {
   .title {
-    text-align: center;
-    color: #3c6e71;
-    margin-bottom: 20px;
+    font-size: 24px;
   }
-  
-  .problems-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .problem-item {
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
-  }
-  
-  .problem-item:hover {
-    background-color: #e0f7fa;
-  }
-  
+
   .problem-link {
-    text-decoration: none;
-    color: #3c6e71;
-    font-size: 18px;
+    font-size: 16px;
   }
-  
-  .problem-link:hover {
-    text-decoration: underline;
+
+  .problem-item {
+    padding: 10px 15px;
   }
-  
+}
