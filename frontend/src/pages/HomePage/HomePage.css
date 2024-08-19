@@ -1,52 +1,61 @@
-/* HomePage.css */
-.home-page-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Align items to the start (top) */
-    height: 100vh;
-    background-color: black;
-    color: white;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  
-  .text-content h1 {
-    font-size: 3rem;
-    background: linear-gradient(90deg, rgb(255, 87, 34), rgb(33, 150, 243), rgb(76, 175, 80));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    /* text-fill-color: transparent; */
-  }
+/* Home page container styling */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #1d3557; /* Dark background color */
+  color: #f1faee; /* Light text color */
+  font-family: 'Arial', sans-serif;
+  transform: rotateX(50deg) rotateY(-5deg) rotateZ(20deg) scale(1.25);
+  perspective: 2000px;
+}
 
-  .text-content h2 {
-    font-size: 2rem;
-    text-align: left; /* Align text to the left */
-    width: 100%; /* Ensure it takes up full width */
-    /* margin-right: 100px; */
-  }
+/* Title styling */
+.home-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
 
-  .text-content {
-    flex: 1;
-    padding-right: 20px;
-    font-size: 1.5em; /* Increase text size */
-    margin-top: 20px; /* Shift text down a little */
-    margin-left : 15px;
-    text-align: left; /* Align text to the right */
-  }
-  
-  .image-content {
-    flex: 1;
-    text-align: center; /* Align image to the left */
-    margin-top: 10px; /* Shift image up a little */
-    margin-right : 20px;
-  }
-  
-  .image-content img {
-    width: 69%; /* Scale image width */
-    /* height: auto; Maintain aspect ratio */
-    
-    max-width: none; /* Remove any max-width constraints */
-    margin-top: 50px; /* Shift image up a little */
-  }
-  
+/* Links container styling */
+.links-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Link styling */
+.animated-link {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: #f1faee; /* Link color */
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  transition: color 0.3s ease, border 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover effect: changes color and border */
+.animated-link:hover {
+  color: #ffbe0b;
+  border-color: #ffbe0b;
+}
+
+/* Animation for the letter scrambling */
+.animated-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffbe0b;
+  transition: width 0.3s ease;
+}
+
+/* Underline effect on hover */
+.animated-link:hover::after {
+  width: 100%;
+}

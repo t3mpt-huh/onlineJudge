@@ -1,54 +1,54 @@
-/* Dark Theme Styles */
 .admin-container {
-    text-align: center;
-    /* margin-top: 50px; */
-    background-color: #1c1c1c;
-    color: #ffffff;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-size: 24px;
-    margin-bottom: 40px;
-  }
-  
-  .box-container {
-    margin-top : 100px;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-  
-  .box-link {
-    text-decoration: none;
-    color: inherit;
-    width: 250px;
-    margin-bottom: 20px;
-  }
-  
-  .box {
-    background-color: #333;
-    border: 1px solid #444;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    transition: background-color 0.3s, transform 0.3s;
-    cursor: pointer;
-  }
-  
-  .box:hover {
-    background-color: #555;
-    transform: translateY(-5px);
-  }
-  
-  .box h2 {
-    font-size: 20px;
-    margin-bottom: 15px;
-  }
-  
-  .box p {
-    font-size: 16px;
-    color: #ccc;
-  }
-  
+  text-align: center;
+  background-color: #1b1b2f; /* Dark background */
+  color: #ffffff; /* Light text color */
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #e94560; /* Accent color for headings */
+}
+
+.box-container {
+  margin-top: 100px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.box-link {
+  text-decoration: none;
+  color: inherit;
+  width: 250px;
+  margin-bottom: 20px;
+}
+
+.box {
+  background-color: #162447; /* Dark background for boxes */
+  border: 1px solid white; /* Slightly lighter border */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.box:hover {
+  background-color: #1f4068; /* Slightly lighter background on hover */
+  transform: translateY(-5px);
+}
+
+.box h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #e94560; /* Accent color for headings */
+}
+
+.box p {
+  font-size: 16px;
+  color: #ccc; /* Light gray text */
+}

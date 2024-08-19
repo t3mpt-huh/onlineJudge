@@ -14,6 +14,7 @@ import { Compiler } from './pages/Compiler/Compiler';
 import { ProblemsPage } from './pages/Problems/ProblemsPage';
 import { ProblemDetailPage } from './pages/ProblemDetails/ProblemDetailsPage';
 import { AddProblemPage } from './pages/AddProblem/AddProblemPage';
+import { SubmissionsPage } from './pages/Submissions/SubmissionsPage';
 import { EditProblemPage } from './pages/EditProblem/EditProblemPage';
 import {AdminPage} from './pages/AdminPage/AdminPage'; // Admin Page
 import PrivateRoute from './components/PrivateRoute';
@@ -25,6 +26,7 @@ import './App.css';
 
 const App = () => {
   return (
+    <div className="idk123">
     <AuthProvider>
       <Router>
         <Navbar />
@@ -35,6 +37,8 @@ const App = () => {
           <Route path="/notadmin" element={<NotAdmin />} />
           <Route path="/notsignedin" element={<NotSignedIn />} />
           
+          <Route path="/submissions" element={<SubmissionsPage/>}/>
+
           <Route path="/about" element={<About />} />
           <Route
             path="/compiler"
@@ -88,6 +92,7 @@ const App = () => {
         {/* <Footer /> */}
       </Router>
     </AuthProvider>
+    </div>
   );
 };
 

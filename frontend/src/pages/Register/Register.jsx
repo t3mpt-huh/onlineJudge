@@ -38,7 +38,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container">   
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <label>
@@ -84,5 +84,6 @@ export const Register = () => {
         <button type="submit">Register</button>
       </form>
     </div>
+    
   );
 };

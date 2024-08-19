@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import MonacoEditor from '@monaco-editor/react';
@@ -6,21 +6,22 @@ import CircleLoader from 'react-spinners/CircleLoader';
 import ClimbingBoxLoader from 'react-spinners/ClimbingBoxLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../../components/AuthContext'; // Import AuthContext
 
 import './ProblemDetailsPage.css';
 
 export const ProblemDetailPage = () => {
+  const { user } = useContext(AuthContext); // Get user from AuthContext
   const [problem, setProblem] = useState(null);
-  const [sourceCode, setSourceCode] = useState(`
-// Sample C++ Code
-#include <iostream>
+  const [sourceCode, setSourceCode] = useState(
+`#include <iostream>
 using namespace std;
 
 int main() {
     cout<<"cook here";
     return 0;
-}
-  `);
+}`
+);
   const [loading, setLoading] = useState(false);
   const [runLoading, setRunLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -56,63 +57,25 @@ int main() {
     fetchProblem();
   }, [problemId]);
 
-  useEffect(() => {
-    const handleMouseDown = (e) => {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-    };
-
-    const handleMouseMove = (e) => {
-      const container = document.querySelector('.problem-detail-container');
-      const left = document.querySelector('.problem-detail-left');
-      const right = document.querySelector('.problem-detail-right');
-      const third = document.querySelector('.problem-detail-third');
-
-      const containerWidth = container.getBoundingClientRect().width;
-      const offsetX = e.clientX / containerWidth;
-
-      left.style.flex = offsetX;
-      right.style.flex = 1 - offsetX / 2;
-      third.style.flex = 1 - offsetX / 2;
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    const resizers = document.querySelectorAll('.resizer');
-    resizers.forEach(resizer => {
-      resizer.addEventListener('mousedown', handleMouseDown);
-    });
-
-    return () => {
-      resizers.forEach(resizer => {
-        resizer.removeEventListener('mousedown', handleMouseDown);
-      });
-    };
-  }, []);
-
   const handleLanguageChange = (event) => {
     const selectedLanguage = event.target.value;
     setLanguage(selectedLanguage);
     
     if (selectedLanguage === 'cpp') {
-      setSourceCode(`
-// Sample C++ Code
-#include <iostream>
+      setSourceCode(
+`#include <iostream>
 using namespace std;
 
 int main() {
     cout<<"cook here";
     return 0;
-}
-      `);
+}`
+);
     } else if (selectedLanguage === 'python') {
-      setSourceCode(`
-# Sample Python Code
-print('hello world')
-      `);
+      setSourceCode(
+`# Sample Python Code
+print('hello world')`
+);
     }
   };
 
@@ -170,33 +133,22 @@ print('hello world')
       }
     }
   
-    // Set the full verdict results array
     setVerdicts(results);
-  
-    // Return the full array of results for further processing
     return results;
   };
   
-  
-
   const handleSubmit = async () => {
     setSubmitLoading(true);
     try {
-      // Prepare sample and hidden test cases
       const sampleTestCases = problem.inputTests.map((input, index) => [input, problem.outputTests[index]]);
       const hiddenTestCases = problem.hiddenInputTests.map((input, index) => [input, problem.hiddenOutputTests[index]]);
   
-      // Execute sample and hidden test cases and retrieve the results
       const sampleTestsResults = await executeTestCases(sampleTestCases);
       const hiddenTestsResults = await executeTestCases(hiddenTestCases, true);
   
-      // Combine sample and hidden test results into a single array
       const allTestResults = [...sampleTestsResults, ...hiddenTestsResults];
-  
-      // Display verdicts for both sample and hidden test cases
       setVerdicts(allTestResults);
   
-      // Check for pass/fail statuses and show toast notifications
       const sampleTestsPassed = sampleTestsResults.every(result => result.verdict === 'Passed');
       const hiddenTestsPassed = hiddenTestsResults.every(result => result.verdict === 'Passed');
   
@@ -211,6 +163,26 @@ print('hello world')
       } else if (sampleTestsPassed && hiddenTestsPassed) {
         toast.success("All test cases passed! Problem solved!");
       }
+
+      // Prepare submission payload
+    const submissionPayload = {
+        userId: user._id,
+        username: user.username,
+        language: language,
+        code: sourceCode,
+        problemName: problem.problemName,
+        problemId: problem._id,
+        verdict: allTestResults.map(result => result.verdict), // Array of verdict strings
+        time: new Date().toString(), // Date and time of submission
+      };
+
+      try {
+        await axios.post('http://localhost:5000/api/submissions/submit', submissionPayload);
+        toast.success('Submission recorded successfully!');
+      } catch (error) {
+        toast.error('Failed to record submission.');
+        console.error('Submission error:', error);
+      }
   
     } catch (error) {
       toast.error("An error occurred while submitting the code.");
@@ -219,19 +191,12 @@ print('hello world')
       setSubmitLoading(false);
     }
   };
-  
-  
-  
+
   const handleRun = async () => {
     setRunLoading(true);
     try {
-      // Construct test cases from problem input and output
       const sampleTestCases = problem.inputTests.map((input, index) => [input, problem.outputTests[index]]);
-      
-      // Execute the test cases
       const results = await executeTestCases(sampleTestCases);
-      
-      // Check if all test cases passed
       const allPassed = results.every(result => result.verdict === 'Passed');
       
       if (allPassed) {
@@ -240,7 +205,6 @@ print('hello world')
         toast.error("Sample test cases failed.");
       }
       
-      // Optionally log results for debugging
       console.log("Test case results:", results);
     } catch (error) {
       toast.error("An error occurred while running the sample test cases.");
@@ -249,7 +213,6 @@ print('hello world')
       setRunLoading(false);
     }
   };
-  
 
   const handleExecute = async () => {
     setExecuteLoading(true);
