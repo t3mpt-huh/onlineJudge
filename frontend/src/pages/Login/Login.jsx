@@ -23,9 +23,9 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const response = await axios.post(`${import.meta.env.VITE_RENDER_URL}/api/auth/login`, formData);
       localStorage.setItem('token', response.data.token);
-      const userResponse = await axios.get('http://localhost:5000/api/auth/user', {
+      const userResponse = await axios.get(`${import.meta.env.VITE_RENDER_URL}/api/auth/user`, {
         headers: { Authorization: `Bearer ${response.data.token}` },
       });
       setUser(userResponse.data.userData);

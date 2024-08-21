@@ -9,7 +9,7 @@ export const ProblemsPage = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/problems/getProblems');
+        const response = await axios.get(`${import.meta.env.VITE_RENDER_URL}/api/problems/getproblems`);
         setProblems(response.data);
       } catch (error) {
         console.error('Error fetching problems:', error);

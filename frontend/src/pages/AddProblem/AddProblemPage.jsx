@@ -71,7 +71,7 @@ export const AddProblemPage = () => {
 
     try {
       console.log('Submitting problem:', problem); // Log problem data
-      await axios.post('http://localhost:5000/api/problems/addProblem', problem);
+      await axios.post(`${import.meta.env.VITE_RENDER_URL}/api/problems/addproblems`, problem);
       navigate('/problems');
     } catch (error) {
       if (error.response) {

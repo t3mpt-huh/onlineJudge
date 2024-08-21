@@ -14,7 +14,7 @@ export const SubmissionsPage = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/submissions/getsubmissions');
+        const response = await axios.get(`${import.meta.env.VITE_RENDER_URL}/api/submissions/getsubmissions`);
         setSubmissions(response.data.reverse());  // to reverse the data
       } catch (error) {
         console.error('Error fetching submissions:', error);

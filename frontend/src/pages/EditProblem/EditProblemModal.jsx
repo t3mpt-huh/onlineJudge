@@ -21,7 +21,7 @@ export const EditProblemModal = ({ problem, onClose, onSave }) => {
     e.preventDefault();
     try {
       console.log("Updating problem with ID:", problem._id); // Debugging line
-      const response = await axios.put(`http://localhost:5000/api/problems/updateProblem/${problem._id}`, editedProblem);
+      const response = await axios.put(`${import.meta.env.VITE_RENDER_URL}/api/problems/updateProblem/${problem._id}`, editedProblem);
       onSave(response.data);
       onClose();
     } catch (error) {

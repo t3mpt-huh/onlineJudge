@@ -11,7 +11,7 @@ export const EditProblemPage = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/problems/getProblems');
+        const response = await axios.get(`${import.meta.env.VITE_RENDER_URL}/api/problems/getproblems`);
         setProblems(response.data);
       } catch (error) {
         console.error('Error fetching problems:', error);
@@ -28,7 +28,7 @@ export const EditProblemPage = () => {
 
   const handleDeleteClick = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/problems/deleteProblem/${id}`);
+      await axios.delete(`${import.meta.env.VITE_RENDER_URL}/api/problems/deleteProblem/${id}`);
       setProblems(problems.filter((problem) => problem._id !== id));
     } catch (error) {
       console.error('Error deleting problem:', error);

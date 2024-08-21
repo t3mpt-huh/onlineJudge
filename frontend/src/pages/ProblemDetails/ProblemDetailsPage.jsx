@@ -44,7 +44,7 @@ int main() {
 
     const fetchProblem = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/problems/getProblems');
+        const response = await axios.get(`${import.meta.env.VITE_RENDER_URL}/api/problems/getproblems`);
         const problems = response.data;
         const foundProblem = problems.find(p => p._id === problemId);
         setProblem(foundProblem);
@@ -93,7 +93,7 @@ print('hello world')`
       };
   
       try {
-        const response = await axios.post("http://localhost:8080/compile", requestPayload);
+        const response = await axios.post(`${import.meta.env.VITE_AWS_URL}/compile`, requestPayload);
   
         let responseData = response.data;
         if (typeof responseData === 'string') {
@@ -177,7 +177,7 @@ print('hello world')`
       };
 
       try {
-        await axios.post('http://localhost:5000/api/submissions/submit', submissionPayload);
+        await axios.post(`${import.meta.env.VITE_RENDER_URL}/api/submissions/submit`, submissionPayload);
         toast.success('Submission recorded successfully!');
       } catch (error) {
         toast.error('Failed to record submission.');
@@ -222,7 +222,7 @@ print('hello world')`
         code: sourceCode,
         input: userInput,
       };
-      const response = await axios.post("http://localhost:8080/compile", requestPayload);
+      const response = await axios.post(`${import.meta.env.VITE_AWS_URL}/compile`, requestPayload);
   
       let responseData = response.data;
       if (typeof responseData === 'string') {

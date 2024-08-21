@@ -43,7 +43,7 @@ int main() {
     };
 
     try {
-      const response = await axios.post("http://13.127.185.202:8080/compile", requestPayload);
+      const response = await axios.post(`${import.meta.env.VITE_AWS_URL}/compile`, requestPayload);
       const { output } = response.data;
 
       // Extract values from the nested output object
