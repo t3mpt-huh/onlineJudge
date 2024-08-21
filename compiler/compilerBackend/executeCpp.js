@@ -10,7 +10,7 @@ if (!fs.existsSync(outputPath)) {
 
 const executeCpp = (filepath, inputPath) => {
   const jobId = path.basename(filepath).split(".")[0];
-  const outPath = path.join(outputPath, `${jobId}.exe`);
+  const outPath = path.join(outputPath, `${jobId}.out`);
 
   return new Promise((resolve, reject) => {
     // Measure start time for compilation
@@ -28,7 +28,12 @@ const executeCpp = (filepath, inputPath) => {
       // Measure start time for execution
       const executeStart = process.hrtime();
 
-      exec(`cd ${outputPath} && .\\${jobId}.exe < ${inputPath}`, (runtimeError, runtimeStdout, runtimeStderr) => {
+      // Use platform-specific command
+      const command = process.platform === 'win32'
+        ? `${outPath} < ${inputPath}`
+        : `cd ${outputPath} && ./${jobId}.out < ${inputPath}`;
+
+      exec(command, (runtimeError, runtimeStdout, runtimeStderr) => {
         // Measure end time for execution and calculate duration
         const [executeSeconds, executeNanoseconds] = process.hrtime(executeStart);
         const executeTime = executeSeconds * 1000 + executeNanoseconds / 1e6; // Convert to milliseconds
@@ -50,7 +55,6 @@ const executeCpp = (filepath, inputPath) => {
     });
   });
 };
-
 
 module.exports = {
   executeCpp,

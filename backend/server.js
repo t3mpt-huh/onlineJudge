@@ -21,7 +21,7 @@ app.use("/api/submissions", submissionsRoute);
 
 app.use(errorMiddleware);
 
-const PORT = 5000;
+const port = process.env.PORT || 5000;
 connectDb().then(() => {
   app.listen(PORT, () => {
     console.log(`server is running at port: ${PORT}`);
