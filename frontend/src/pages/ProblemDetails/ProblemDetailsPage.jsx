@@ -93,7 +93,7 @@ print('hello world')`
       };
   
       try {
-        const response = await axios.post(`${import.meta.env.VITE_AWS_URL}/compile`, requestPayload);
+        const response = await axios.post(`${import.meta.env.VITE_COMPILER_SECURE_URL}/compile`, requestPayload);
   
         let responseData = response.data;
         if (typeof responseData === 'string') {
@@ -222,7 +222,7 @@ print('hello world')`
         code: sourceCode,
         input: userInput,
       };
-      const response = await axios.post(`${import.meta.env.VITE_AWS_URL}/compile`, requestPayload);
+      const response = await axios.post(`${import.meta.env.VITE_COMPILER_SECURE_URL}/compile`, requestPayload);
   
       let responseData = response.data;
       if (typeof responseData === 'string') {

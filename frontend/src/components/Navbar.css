@@ -108,6 +108,7 @@ body {
 }
 
 .logout-button:hover {
+    background-color: transparent;
     border-color: #dc2f02;
     color: #dc2f02;
 }
