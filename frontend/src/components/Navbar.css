@@ -1,39 +1,43 @@
-/* Universal box-sizing for better layout control */
-* {
-    box-sizing: border-box;
-}
-
-/* Reset default margin */
-body {
-    margin: 0;
-}
-
-/* Center content with a container class */
-.container {
-    margin: 1rem;
-    text-align: center;
-}
-
-/* Navbar styling */
+/* Navbar container styling */
 .nav {
+    position: fixed; /* Keeps the navbar fixed at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* Adjust as needed */
     background-color: #1d3557; /* Updated background color */
     color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 1rem;
+    z-index: 1000; /* Ensures the navbar is above other content */
+}
+
+/* Adjust padding to prevent overlap with navbar */
+body {
+    padding-top: 60px; /* Adjust based on the navbar height */
+    margin: 0;
 }
 
 /* Site title styling */
 .site-title {
-    font-size: 1.5rem; /* Reduced font size */
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
+    text-decoration: none; /* Ensure no underline */
+    color: white; /* Ensure the text color */
+    width: 150px; /* Fixed width */
+    height: 50px; /* Fixed height to match navbar height */
+    overflow: hidden; /* Ensures content does not overflow */
+    text-align: center; /* Centers text horizontally */
+    line-height: 50px; /* Vertically centers text */
 }
 
-.site-title:hover{
-    background-color: white;
-    color : black;
+/* Hover effect for the site title */
+.site-title:hover {
+    background-color: transparent;
+    color: orange; /* Color on hover */
 }
 
 /* Navbar list styling */
@@ -49,7 +53,7 @@ body {
 /* Navbar links styling */
 .nav a {
     color: inherit;
-    text-decoration: none;
+    text-decoration: none; /* Ensure no underline */
     height: 100%;
     display: flex;
     align-items: center;
@@ -81,7 +85,7 @@ body {
 
 /* Active link background color */
 .nav li.active {
-    background-color: white; /* Updated active link color */
+    background-color: white;
     opacity: 50%;
 }
 
@@ -96,8 +100,8 @@ body {
     border: 2px solid #f48c06;
     color: #f48c06;
     border-radius: 16px;
-    padding: 6px 12px; /* Slightly smaller padding */
-    font-size: 0.875rem; /* Smaller font size */
+    padding: 6px 12px;
+    font-size: 0.875rem;
     cursor: pointer;
     transition: color 0.3s ease, border-color 0.3s ease;
     display: inline-block;
@@ -106,28 +110,22 @@ body {
 .logout-button:hover {
     border-color: #dc2f02;
     color: #dc2f02;
-    background-color: transparent;
-    /* No transform or background change */
-}
-
-.logout-button:active {
-    transform: translateY(1px); /* Slightly pressed effect on click */
 }
 
 /* Styling for register and login links */
 .nav .green-button {
     background-color: transparent;
-    border: 1px solid #80b918; /* Smaller border */
+    border: 1px solid #80b918;
     color: #80b918;
     border-radius: 16px;
-    padding: 6px 12px; /* Smaller padding */
-    font-size: 0.875rem; /* Smaller font size */
+    padding: 6px 12px;
+    font-size: 0.875rem;
     cursor: pointer;
     transition: color 0.3s ease, border-color 0.3s ease;
     display: inline-block;
 }
 
-/* No underline effect on hover for register and login links */
+/* Remove underline effect on hover for register and login links */
 .nav .green-button:hover {
     color: #dddf00;
     border-color: #dddf00;

@@ -8,7 +8,7 @@ export const Navbar = () => {
   const titleRef = useRef(null);
 
   useEffect(() => {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz..........__________";
     let interval = null;
 
     const handleMouseOver = (event) => {
@@ -22,7 +22,7 @@ export const Navbar = () => {
             if (index < iteration) {
               return event.target.dataset.value[index];
             }
-            return letters[Math.floor(Math.random() * 26)];
+            return letters[Math.floor(Math.random() * 72)];
           })
           .join("");
 
@@ -34,19 +34,23 @@ export const Navbar = () => {
       }, 30);
     };
 
-    const titleElement = titleRef.current;
-    titleElement.dataset.value = titleElement.innerText;
-    titleElement.addEventListener('mouseover', handleMouseOver);
+    // Using querySelector to select the title element
+    const titleElement = document.querySelector('.site-title .animated-title');
+    if (titleElement) {
+      titleElement.dataset.value = titleElement.innerText;
+      titleElement.addEventListener('mouseover', handleMouseOver);
 
-    return () => {
-      titleElement.removeEventListener('mouseover', handleMouseOver);
-    };
+      return () => {
+        titleElement.removeEventListener('mouseover', handleMouseOver);
+      };
+    }
+
   }, []);
 
   return (
     <header>
       <div className="nav">
-        <div className="site-title">
+        <div className="site-title" >
           <NavLink to="/" ref={titleRef} className="animated-title">
             LetHimCode
           </NavLink>

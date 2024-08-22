@@ -1,71 +1,30 @@
-import React, { useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import './HomePage.css';
 
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 export const Home = () => {
-  const linksRef = useRef([]);
-
   useEffect(() => {
-    linksRef.current.forEach((linkElement) => {
-      const handleMouseOver = (event) => {
-        let iteration = 0;
-        clearInterval(linkElement.interval);
-        linkElement.dataset.value = linkElement.innerText;
+    const menu = document.getElementById("menu");
 
-        linkElement.interval = setInterval(() => {
-          event.target.innerText = event.target.innerText
-            .split("")
-            .map((letter, index) => {
-              if (index < iteration) {
-                return event.target.dataset.value[index];
-              }
-              return letters[Math.floor(Math.random() * 26)];
-            })
-            .join("");
-
-          if (iteration >= event.target.dataset.value.length) {
-            clearInterval(linkElement.interval);
-          }
-
-          iteration += 1 / 3;
-        }, 30);
-      };
-
-      linkElement.addEventListener('mouseover', handleMouseOver);
-
-      return () => {
-        linkElement.removeEventListener('mouseover', handleMouseOver);
+    Array.from(document.getElementsByClassName("menu-item")).forEach((item, index) => {
+      item.onmouseover = () => {
+        menu.dataset.activeIndex = index;
       };
     });
   }, []);
 
   return (
-    <div className="home-container">
-      <h1 className="home-title">Welcome to LetHimCode</h1>
-      <div className="links-container">
-        {[
-          { path: '/register', label: 'Register' },
-          { path: '/login', label: 'Login' },
-          { path: '/compiler', label: 'Compiler' },
-          { path: '/problems', label: 'Problems' },
-          { path: '/admin', label: 'Admin' },
-          { path: '/addproblem', label: 'Add Problem' },
-          { path: '/editproblem', label: 'Edit Problem' }
-        ].map((link, index) => (
-          <NavLink
-            key={link.path}
-            to={link.path}
-            className="animated-link"
-            ref={(el) => linksRef.current[index] = el}
-          >
-            {link.label}
-          </NavLink>
-        ))}
+    <div id="menu">
+      <div id="menu-items">
+
+        <div className="menu-item">Problems</div>
+        <div className="menu-item">Compiler</div>
+        <div className="menu-item">Submissions</div>
+        <div className="menu-item">About</div>
+        <div className="menu-item">Admin</div>
+        
       </div>
+      <div id="menu-background-pattern"></div>
+      <div id="menu-background-image"></div>
     </div>
   );
 };
-
-// export default {HomeP};
