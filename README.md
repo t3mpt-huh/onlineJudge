@@ -14,6 +14,16 @@ A full-fledged Level-4 Online Judge platform where users can:
 
 Developed as part of a solo project during my externship at [AlgoUniversity (YC-backed)](https://algouniversity.com/), this platform simulates real-world online judges like Codeforces, LeetCode, etc.
 
+## 📸 Demo & UI Screenshots
+
+![Screenshot (322)](https://github.com/user-attachments/assets/c8b967de-42e1-4ee1-94dd-71a391156508)
+
+![Screenshot (321)](https://github.com/user-attachments/assets/9e8c6de4-5c70-4d13-97b8-e04c69c180a1)
+
+![Screenshot (320)](https://github.com/user-attachments/assets/413fa463-471d-4151-891a-3a0db4f8eac9)
+
+![Screenshot (323)](https://github.com/user-attachments/assets/c8c38d0a-3945-407f-bb1d-8c7a219ddd8e)
+
 ## 🚀 Tech Stack
 
 - **Frontend**: React.js, HTML, CSS, Bootstrap
