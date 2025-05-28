@@ -1,6 +1,7 @@
 # 🧑‍⚖️ Online Judge Platform
 
 **Live Link:** _Currently offline_ (https://lethimcode.pro/)
+
 **Note:** ⚠️ The compiler backend has been shut down as of **December 2024**.
 
 ## 📌 Overview
