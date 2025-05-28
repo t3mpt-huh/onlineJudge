@@ -1,6 +1,6 @@
 # 🧑‍⚖️ Online Judge Platform
 
-**Live Link:** _Currently offline_  
+**Live Link:** _Currently offline_ (https://lethimcode.pro/)
 **Note:** ⚠️ The compiler backend has been shut down as of **December 2024**.
 
 ## 📌 Overview
@@ -76,8 +76,3 @@ B.Tech, Mechanical Engineering, IIT Roorkee (2022–2026)
 
 📫 Contact: [anshbansal270@gmail.com](mailto:anshbansal270@gmail.com)  
 🔗 LinkedIn: [linkedin.com/in/ansh-bansal-962238264](https://www.linkedin.com/in/ansh-bansal-962238264)  
-🔗 GitHub: [github.com/t3mpt-huh](https://github.com/t3mpt-huh)
-
----
-
-> _Star ⭐ this repo if you find it helpful!_
